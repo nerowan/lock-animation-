@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>跟着辛鱼学环境科学</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* 全局样式 */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #4682B4;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+        header {
+            background-color: #000080;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* 主菜单样式 */
+        #main-menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .menu-btn {
+            background-color: #FF8C00;
+            border: none;
+            padding: 15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 1.2em;
+            margin: 10px 0;
+            width: 200px;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .menu-btn:hover {
+            background-color: #FFA500;
+            transform: scale(1.05);
+        }
+        /* 章节选择界面样式 */
+        #chapter-select {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+        .chapter-btn {
+            background-color: #20B2AA;
+            border: none;
+            padding: 15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 1.2em;
+            margin: 10px 0;
+            width: 220px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .chapter-btn:hover {
+            background-color: #3CB371;
+            transform: scale(1.05);
+        }
+        .difficulty-label {
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 5px 10px;
+            font-size: 0.8em;
+        }
+        .back-btn {
+            background-color: #FF6347;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1em;
+            margin-top: 20px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .back-btn:hover {
+            background-color: #FF4500;
+            transform: scale(1.05);
+        }
+        /* 游戏容器样式 */
+        #game-container, #vocab-container, #achievements-container, #leaderboard-container, #competitive-container {
+            display: none;
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            height: 600px;
+            background: #006400; /* 球场绿色 */
+            border: 5px solid #000080;
+            margin: 20px 0;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+        /* 使用CSS绘制辛鱼（Xinyu） */
+        #xinyu {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            width: 80px;
+            height: 120px;
+            background-color: #FFD700;
+            border: 2px solid #000;
+            border-radius: 10px;
+            transition: left 0.5s, bottom 0.5s, transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            z-index: 2;
+        }
+        /* Xinyu 的身体部分 */
+        .xinyu-body {
+            width: 60%;
+            height: 60%;
+            background-color: #1E90FF;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        /* Xinyu 的头部 */
+        .xinyu-head {
+            width: 40px;
+            height: 40px;
+            background-color: #FFE4C4;
+            border: 2px solid #000;
+            border-radius: 50%;
+            margin-top: -20px;
+        }
+        /* 使用CSS绘制足球 */
+        #ball {
+            position: absolute;
+            bottom: 100px;
+            left: 400px;
+            width: 40px;
+            height: 40px;
+            background-color: #FFFFFF;
+            border: 2px solid #000;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 4px #000;
+            transition: left 1s, bottom 1s;
+            z-index: 1;
+        }
+        /* 问题框样式 */
+        #question-box {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 128, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            display: none;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 4;
+        }
+        #question-box h3 {
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+        #answers {
+            display: flex;
+            flex-direction: column;
+            margin-top: 15px;
+        }
+        .answer-btn {
+            background-color: #20B2AA;
+            border: none;
+            padding: 12px;
+            margin: 8px 0;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        .answer-btn:hover {
+            background-color: #3CB371;
+        }
+        /* 反馈框样式 */
+        #feedback {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            color: #000;
+            padding: 30px;
+            border-radius: 15px;
+            display: none;
+            text-align: center;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            z-index: 5;
+        }
+        #feedback p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        #feedback button {
+            background-color: #1E90FF;
+            border: none;
+            padding: 15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        #feedback button:hover {
+            background-color: #1C86EE;
+        }
+        /* 成就和排行榜样式 */
+        .container-title {
+            text-align: center;
+            font-size: 2em;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .list {
+            list-style: none;
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .list-item {
+            background-color: #000080;
+            margin: 10px auto;
+            padding: 15px;
+            border-radius: 10px;
+            width: 80%;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            font-size: 1.2em;
+        }
+        /* 词汇卡样式 */
+        #vocab-container {
+            padding: 20px;
+            position: relative;
+            height: 600px;
+            overflow-y: auto;
+        }
+        .vocab-card {
+            background-color: #20B2AA;
+            border: none;
+            padding: 20px;
+            margin: 10px auto;
+            color: #fff;
+            border-radius: 10px;
+            width: 80%;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            position: relative;
+            perspective: 1000px;
+        }
+        .vocab-card:hover {
+            background-color: #3CB371;
+            transform: scale(1.02);
+        }
+        .vocab-term {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .vocab-definition {
+            display: none;
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+        .vocab-card.flipped .vocab-definition {
+            display: block;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            background-color: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+        /* 进度条样式 */
+        #progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 10px;
+            background-color: #FF8C00;
+            width: 0%;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            transition: width 0.5s;
+            z-index: 6;
+        }
+        /* 竞技模式容器样式 */
+        #competitive-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #2F4F4F;
+            width: 90%;
+            max-width: 1000px;
+            height: 600px;
+            border: 5px solid #000080;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .matching-animation {
+            width: 100px;
+            height: 100px;
+            border: 10px solid #fff;
+            border-top: 10px solid #000080;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        #match-result {
+            display: none;
+            text-align: center;
+        }
+        #match-result p {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        #match-result button {
+            background-color: #1E90FF;
+            border: none;
+            padding: 15px 30px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 10px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        #match-result button:hover {
+            background-color: #1C86EE;
+        }
+        /* 实时得分显示 */
+        .score-board {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 7;
+        }
+        /* 计时器样式 */
+        .timer {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(255, 255, 255, 0.3);
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 7;
+        }
+        /* 添加动画关键帧 */
+        @keyframes celebrate {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            50% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
+        }
+        @keyframes shake {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(-10px, -10px); }
+            50% { transform: translate(10px, -10px); }
+            75% { transform: translate(-10px, 10px); }
+            100% { transform: translate(10px, 10px); }
+        }
+        @keyframes kick {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes shoot-own-goal {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(30px); }
+            100% { transform: translateY(0); }
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .celebrate {
+            animation: celebrate 0.5s ease-in-out;
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        .kick {
+            animation: kick 0.5s ease-in-out;
+        }
+        .shoot-own-goal {
+            animation: shoot-own-goal 0.5s ease-in-out;
+        }
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            header {
+                font-size: 1.5em;
+                padding: 15px;
+            }
+            #game-container, #vocab-container, #achievements-container, #leaderboard-container, #competitive-container {
+                height: 500px;
+            }
+            #xinyu {
+                width: 60px;
+                height: 90px;
+            }
+            .xinyu-body {
+                width: 50%;
+                height: 50%;
+            }
+            .xinyu-head {
+                width: 30px;
+                height: 30px;
+            }
+            #ball {
+                width: 30px;
+                height: 30px;
+            }
+            #question-box h3 {
+                font-size: 1.2em;
+            }
+            .answer-btn {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            #feedback p {
+                font-size: 1em;
+            }
+            #start-btn, #restart-btn, .back-btn {
+                padding: 15px 30px;
+                font-size: 1.2em;
+            }
+            .vocab-card {
+                width: 90%;
+            }
+            .list-item {
+                width: 90%;
+            }
+            .score-board, .timer {
+                font-size: 1em;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>跟着辛鱼学环境科学</header>
+
+    <!-- 主菜单 -->
+    <div id="main-menu">
+        <button class="menu-btn" id="start-game-btn">开始游戏</button>
+        <button class="menu-btn" id="competitive-mode-btn">竞技模式</button>
+        <button class="menu-btn" id="vocab-btn">词汇卡</button>
+        <button class="menu-btn" id="achievements-btn">成就</button>
+        <button class="menu-btn" id="leaderboard-btn">排行榜</button>
+    </div>
+
+    <!-- 章节选择界面 -->
+    <div id="chapter-select">
+        <div class="container-title">选择章节</div>
+        <button class="chapter-btn" data-chapter="1">
+            <span>第一章：环境科学入门</span>
+            <span class="difficulty-label">难度: 易</span>
+        </button>
+        <button class="chapter-btn" data-chapter="2">
+            <span>第二章：大气污染与气候变化</span>
+            <span class="difficulty-label">难度: 中</span>
+        </button>
+        <button class="chapter-btn" data-chapter="3">
+            <span>第三章：水污染与水资源管理</span>
+            <span class="difficulty-label">难度: 中</span>
+        </button>
+        <button class="chapter-btn" data-chapter="4">
+            <span>第四章：土壤污染与生态修复</span>
+            <span class="difficulty-label">难度: 高</span>
+        </button>
+        <button class="chapter-btn" data-chapter="5">
+            <span>第五章：废弃物处理与循环经济</span>
+            <span class="difficulty-label">难度: 高</span>
+        </button>
+        <button class="back-btn" id="back-from-chapter-btn">返回主菜单</button>
+    </div>
+
+    <!-- 游戏容器 -->
+    <div id="game-container">
+        <!-- 进度条 -->
+        <div id="progress-bar"></div>
+        <!-- 辛鱼角色 -->
+        <div id="xinyu">
+            <div class="xinyu-head"></div>
+            <div class="xinyu-body"></div>
+        </div>
+        <!-- 足球 -->
+        <div id="ball"></div>
+        
+        <!-- 问题框 -->
+        <div id="question-box">
+            <h3 id="question">问题文本</h3>
+            <div id="answers">
+                <!-- 答案按钮 -->
+            </div>
+        </div>
+
+        <!-- 反馈框 -->
+        <div id="feedback">
+            <p id="feedback-text">反馈信息</p>
+            <button id="next-btn">继续</button>
+            <button id="return-main-btn" style="display:none; margin-top: 10px;">返回主菜单</button>
+        </div>
+    </div>
+
+    <!-- 竞技模式容器 -->
+    <div id="competitive-container">
+        <div class="container-title">竞技模式</div>
+        <div class="score-board" id="score-board">
+            你: 0 | 环境老师: 0
+        </div>
+        <div class="timer" id="timer">
+            时间: 15s
+        </div>
+        <div id="matching">
+            <div class="matching-animation"></div>
+            <p>正在匹配对手...</p>
+        </div>
+        <div id="matched" style="display:none; text-align:center;">
+            <p>您匹配到了环境老师！</p>
+            <button class="menu-btn" id="start-competition-btn">开始竞赛</button>
+        </div>
+        <div id="competition" style="display:none; width: 100%; height: 100%;">
+            <!-- 竞赛中的问题和分数 -->
+            <div id="comp-progress-bar" style="position:absolute; top:0; left:0; height:10px; background-color:#FF8C00; width:0%; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; transition: width 0.5s;"></div>
+            <div id="comp-question-box" style="position:absolute; top:20px; left:50%; transform: translateX(-50%); background-color: rgba(0, 0, 128, 0.9); padding:20px; border-radius:15px; display:none; width:90%; max-width:600px; box-shadow: 0 4px 8px rgba(0,0,0,0.3); z-index:4;">
+                <h3 id="comp-question">问题文本</h3>
+                <div id="comp-answers">
+                    <!-- 答案按钮 -->
+                </div>
+            </div>
+            <div id="comp-feedback" style="position:absolute; top:50%; left:50%; transform: translate(-50%, -50%); background-color: rgba(255, 255, 255, 0.95); color:#000; padding:30px; border-radius:15px; display:none; text-align:center; width:80%; max-width:500px; box-shadow:0 8px 16px rgba(0,0,0,0.3); z-index:5;">
+                <p id="comp-feedback-text">反馈信息</p>
+                <button id="comp-next-btn">继续</button>
+            </div>
+        </div>
+        <div id="match-result" style="display:none;">
+            <p id="match-result-text">比赛结果</p>
+            <button id="return-main-from-match-btn">返回主菜单</button>
+        </div>
+    </div>
+
+    <!-- 词汇卡容器 -->
+    <div id="vocab-container">
+        <button class="close-btn" id="close-vocab-btn">&times;</button>
+        <div class="container-title">环境科学词汇卡</div>
+        <div id="vocab-cards">
+            <!-- 词汇卡 -->
+        </div>
+    </div>
+
+    <!-- 成就容器 -->
+    <div id="achievements-container">
+        <button class="close-btn" id="close-achievements-btn">&times;</button>
+        <div class="container-title">成就</div>
+        <ul class="list" id="achievements-list">
+            <!-- 成就列表 -->
+        </ul>
+    </div>
+
+    <!-- 排行榜容器 -->
+    <div id="leaderboard-container">
+        <button class="close-btn" id="close-leaderboard-btn">&times;</button>
+        <div class="container-title">排行榜</div>
+        <ul class="list" id="leaderboard-list">
+            <!-- 排行榜列表 -->
+        </ul>
+    </div>
+
+    <script>
+        // ======================
+        // 环境科学问题库
+        // ======================
+        const questions = [
+            /* 第一章：环境科学入门（易） */
+            {
+                chapter: 1,
+                story: "第一章：辛鱼初识环境科学，了解环境系统的基本概念。",
+                question: "Which of the following is NOT considered a component of the environment?",
+                questionCN: "以下哪项不被视为环境的组成部分？",
+                answers: ["Water", "Air", "Buildings", "Soil"],
+                correct: 2,
+                explanation: "环境通常包含生物圈、水、大气和土壤，建筑物并不算是自然环境的组成部分。",
+                difficulty: "easy"
+            },
+            {
+                chapter: 1,
+                story: "辛鱼认识可持续发展的概念。",
+                question: "Which principle is crucial for sustainable development?",
+                questionCN: "可持续发展的核心原则是什么？",
+                answers: ["Unlimited resource use", "Intergenerational equity", "Maximizing pollution", "Reducing biodiversity"],
+                correct: 1,
+                explanation: "可持续发展关注世代公平，即在满足当代需求的同时不损害后代的需求能力。",
+                difficulty: "easy"
+            },
+            {
+                chapter: 1,
+                story: "辛鱼了解生态系统的基本要素。",
+                question: "Which term describes a community of organisms and their physical environment interacting together?",
+                questionCN: "描述生物群落及其与物理环境共同作用的术语是什么？",
+                answers: ["Biosphere", "Ecosystem", "Biome", "Habitat"],
+                correct: 1,
+                explanation: "生态系统（Ecosystem）是生物群落及其与环境相互作用的整体。",
+                difficulty: "easy"
+            },
+            {
+                chapter: 1,
+                story: "辛鱼初步理解环境问题的全球性。",
+                question: "Which global organization is primarily responsible for environmental data and policies?",
+                questionCN: "哪个全球组织主要负责环境数据与政策？",
+                answers: ["WHO", "UNEP", "WTO", "IMF"],
+                correct: 1,
+                explanation: "UNEP（联合国环境规划署）是联合国专门负责环境保护工作的机构。",
+                difficulty: "easy"
+            },
+            {
+                chapter: 1,
+                story: "辛鱼学习环境科学研究方法。",
+                question: "Which method involves collecting data from a real-world ecosystem without manipulation?",
+                questionCN: "哪种研究方法指在不进行干预的情况下，从真实生态系统收集数据？",
+                answers: ["Laboratory experiment", "Field observation", "Model simulation", "Meta-analysis"],
+                correct: 1,
+                explanation: "实地观测（Field observation）是在自然条件下对生态系统进行观察和记录。",
+                difficulty: "easy"
+            },
+
+            /* 第二章：大气污染与气候变化（中） */
+            {
+                chapter: 2,
+                story: "第二章：辛鱼深入研究大气污染源与温室效应。",
+                question: "Which gas is primarily responsible for the greenhouse effect?",
+                questionCN: "哪种气体对温室效应负主要责任？",
+                answers: ["Nitrogen (N₂)", "Carbon dioxide (CO₂)", "Oxygen (O₂)", "Argon (Ar)"],
+                correct: 1,
+                explanation: "二氧化碳是最主要的人为温室气体。",
+                difficulty: "medium"
+            },
+            {
+                chapter: 2,
+                story: "辛鱼学习空气质量指标。",
+                question: "Which pollutant is measured by the Air Quality Index (AQI)?",
+                questionCN: "空气质量指数（AQI）主要针对哪个污染物进行监测？",
+                answers: ["Ozone (O₃)", "Carbon monoxide (CO)", "Particulate matter (PM)", "All of the above"],
+                correct: 3,
+                explanation: "AQI综合了多种主要空气污染物，如O₃、PM2.5、PM10、CO、SO₂、NO₂等。",
+                difficulty: "medium"
+            },
+            {
+                chapter: 2,
+                story: "辛鱼了解气候变化的影响。",
+                question: "Which of the following is NOT a potential impact of global climate change?",
+                questionCN: "以下哪项不是全球气候变化可能带来的影响？",
+                answers: ["Rising sea levels", "Frequent extreme weather", "Decreased UV radiation", "Threats to biodiversity"],
+                correct: 2,
+                explanation: "气候变化会导致更强的紫外线暴露（如臭氧层变薄），并不会减少UV辐射。",
+                difficulty: "medium"
+            },
+            {
+                chapter: 2,
+                story: "辛鱼探讨应对气候变化的国际协议。",
+                question: "The Paris Agreement aims to keep global temperature rise well below what degree Celsius?",
+                questionCN: "《巴黎协定》旨在将全球气温升高控制在多少摄氏度以下？",
+                answers: ["4°C", "2°C", "5°C", "1°C"],
+                correct: 1,
+                explanation: "《巴黎协定》提出要将全球平均气温较工业化前水平的升幅控制在2°C以内。",
+                difficulty: "medium"
+            },
+            {
+                chapter: 2,
+                story: "辛鱼学习减缓气候变化的具体措施。",
+                question: "Which of the following strategies helps reduce CO₂ emissions?",
+                questionCN: "以下哪项策略有助于减少CO₂排放？",
+                answers: ["Increasing coal power", "Deforestation", "Promoting renewable energy", "Encouraging single-use plastics"],
+                correct: 2,
+                explanation: "推广可再生能源（风能、太阳能等）可以有效减少化石燃料排放。",
+                difficulty: "medium"
+            },
+
+            /* 第三章：水污染与水资源管理（中） */
+            {
+                chapter: 3,
+                story: "第三章：辛鱼深入研究水污染的种类与来源。",
+                question: "Which of the following is a point source of water pollution?",
+                questionCN: "以下哪种属于点源水污染？",
+                answers: ["Runoff from farmland", "Oil spill from a tanker", "Acid rain", "Urban stormwater"],
+                correct: 1,
+                explanation: "油轮泄漏是一个明确可追踪到排放点的污染源，属于点源污染。",
+                difficulty: "medium"
+            },
+            {
+                chapter: 3,
+                story: "辛鱼学习水处理的基本步骤。",
+                question: "Which process in water treatment involves the removal of suspended particles by letting them settle?",
+                questionCN: "在水处理过程中，哪一步通过静置使悬浮物沉降而去除杂质？",
+                answers: ["Coagulation", "Sedimentation", "Filtration", "Disinfection"],
+                correct: 1,
+                explanation: "沉降（Sedimentation）是利用重力使水中悬浮杂质下沉，从而分离。",
+                difficulty: "medium"
+            },
+            {
+                chapter: 3,
+                story: "辛鱼了解饮用水消毒。",
+                question: "Which chemical is commonly used to disinfect drinking water?",
+                questionCN: "以下哪种化学物质常用于饮用水消毒？",
+                answers: ["Chlorine", "Benzene", "Lead", "Methanol"],
+                correct: 0,
+                explanation: "氯气或次氯酸钠是最常用的饮用水消毒剂。",
+                difficulty: "medium"
+            },
+            {
+                chapter: 3,
+                story: "辛鱼探讨水资源短缺与管理。",
+                question: "Which of the following is a common method for freshwater resource conservation?",
+                questionCN: "以下哪种方法是常见的淡水资源保护策略？",
+                answers: ["Over-extraction of aquifers", "Desalination", "Constructing more dams without planning", "Wastewater disposal into rivers"],
+                correct: 1,
+                explanation: "海水淡化（Desalination）可以为缺水地区提供额外的淡水资源。",
+                difficulty: "medium"
+            },
+            {
+                chapter: 3,
+                story: "辛鱼学习水污染的控制与法规。",
+                question: "Which international agreement focuses on protecting transboundary watercourses and international lakes?",
+                questionCN: "以下哪项国际协议旨在保护跨界水体和国际湖泊？",
+                answers: ["UNCLOS", "UN Water Convention (Helsinki Convention)", "Kyoto Protocol", "Montreal Protocol"],
+                correct: 1,
+                explanation: "《跨界水道及国际湖泊保护与利用公约》（俗称《赫尔辛基公约》）是保护跨界水资源的重要文件。",
+                difficulty: "medium"
+            },
+
+            /* 第四章：土壤污染与生态修复（高） */
+            {
+                chapter: 4,
+                story: "第四章：辛鱼深入研究土壤污染的类型及修复技术。",
+                question: "Which heavy metal is commonly associated with soil pollution near industrial areas?",
+                questionCN: "在工业区附近导致土壤污染的常见重金属是哪一种？",
+                answers: ["Sodium", "Helium", "Lead (Pb)", "Magnesium"],
+                correct: 2,
+                explanation: "铅（Pb）是工业活动中常见的重金属污染物。",
+                difficulty: "hard"
+            },
+            {
+                chapter: 4,
+                story: "辛鱼学习土壤修复技术。",
+                question: "Which remediation technique uses living organisms, like plants, to remove contaminants from soil?",
+                questionCN: "以下哪种修复技术利用活生物体（如植物）来去除土壤中的污染物？",
+                answers: ["Chemical fixation", "Thermal desorption", "Phytoremediation", "Solidification"],
+                correct: 2,
+                explanation: "植物修复（Phytoremediation）通过种植特定植物吸收或降解土壤中的污染物。",
+                difficulty: "hard"
+            },
+            {
+                chapter: 4,
+                story: "辛鱼了解土壤污染检测方法。",
+                question: "Which method is commonly used to measure soil contamination by chemicals in a lab?",
+                questionCN: "实验室中常用哪种方法来测定土壤化学污染？",
+                answers: ["Gas chromatography-mass spectrometry (GC-MS)", "X-ray diffraction (XRD)", "UV-Vis spectroscopy", "Electrolysis"],
+                correct: 0,
+                explanation: "气相色谱-质谱联用（GC-MS）常用于检测土壤中有机污染物。",
+                difficulty: "hard"
+            },
+            {
+                chapter: 4,
+                story: "辛鱼探讨土壤质量与粮食安全。",
+                question: "Which of the following is NOT a direct consequence of soil contamination for agriculture?",
+                questionCN: "以下哪项并非土壤污染对农业直接造成的影响？",
+                answers: ["Reduced crop yield", "Crop toxicity", "Loss of soil microbes", "Increase in atmospheric CO₂"],
+                correct: 3,
+                explanation: "土壤污染主要影响作物生长及微生物群落，对大气CO₂的直接影响有限。",
+                difficulty: "hard"
+            },
+            {
+                chapter: 4,
+                story: "辛鱼了解生物修复与微生物在生态修复中的应用。",
+                question: "What is the main advantage of bioremediation over chemical methods?",
+                questionCN: "生物修复与化学方法相比的主要优点是什么？",
+                answers: ["Lower cost and eco-friendly", "Immediate removal of pollutants", "No need for scientific monitoring", "Works equally for all types of pollutants"],
+                correct: 0,
+                explanation: "生物修复通常成本更低，对环境更友好，但需要一定时间和科学监管。",
+                difficulty: "hard"
+            },
+
+            /* 第五章：废弃物处理与循环经济（高） */
+            {
+                chapter: 5,
+                story: "第五章：辛鱼探索废弃物管理与循环经济理念。",
+                question: "Which of the following is considered the highest priority in the waste management hierarchy?",
+                questionCN: "以下哪项在废物管理金字塔中优先级最高？",
+                answers: ["Reuse", "Recycling", "Prevention", "Landfilling"],
+                correct: 2,
+                explanation: "在废物管理层次结构中，源头减量或预防（Prevention）优先级最高。",
+                difficulty: "hard"
+            },
+            {
+                chapter: 5,
+                story: "辛鱼学习循环经济与可持续发展。",
+                question: "Which concept emphasizes keeping resources in use for as long as possible, extracting maximum value?",
+                questionCN: "哪种概念强调尽可能长时间地使用资源，并从中获取最大价值？",
+                answers: ["Linear economy", "Greenwashing", "Circular economy", "Traditional trade"],
+                correct: 2,
+                explanation: "循环经济（Circular Economy）强调对资源的循环利用和价值最大化。",
+                difficulty: "hard"
+            },
+            {
+                chapter: 5,
+                story: "辛鱼了解电子废弃物（e-waste）的危害。",
+                question: "Which hazardous material is commonly found in e-waste?",
+                questionCN: "电子垃圾中常含有哪种有害物质？",
+                answers: ["Phosphorus", "Radon", "Cadmium (Cd)", "Silica"],
+                correct: 2,
+                explanation: "镉（Cd）常见于电池和电子零部件中，对环境和健康有害。",
+                difficulty: "hard"
+            },
+            {
+                chapter: 5,
+                story: "辛鱼探讨垃圾填埋和焚烧技术。",
+                question: "Which by-product of waste incineration can be used to generate electricity but also contributes to air pollution if not controlled?",
+                questionCN: "垃圾焚烧产生的哪种副产物可以用于发电，但若不加以控制也会导致大气污染？",
+                answers: ["Ash", "Fly ash", "Biogas", "Flue gas"],
+                correct: 3,
+                explanation: "焚烧产生的烟道气（Flue gas）可用于发电，但需净化处理以降低污染。",
+                difficulty: "hard"
+            },
+            {
+                chapter: 5,
+                story: "辛鱼总结废弃物处理的前沿发展。",
+                question: "Which waste treatment technology involves converting waste into synthetic gas under high temperature and low oxygen conditions?",
+                questionCN: "以下哪种废物处理技术指在高温且低氧环境下将废物转化为合成气？",
+                answers: ["Composting", "Anaerobic digestion", "Pyrolysis", "Mechanical sorting"],
+                correct: 2,
+                explanation: "热解（Pyrolysis）是在缺氧或低氧条件下将有机废物转化为合成气、焦油等。",
+                difficulty: "hard"
+            },
+        ];
+
+        // ======================
+        // 环境科学词汇库
+        // ======================
+        const vocabulary = [
+            { term: "Sustainable Development", definition: "可持续发展：在满足当代需求的同时，不损害后代满足需求的能力。" },
+            { term: "Biodiversity", definition: "生物多样性：地球上各种生命形式及其生态关系的总和。" },
+            { term: "Ecosystem", definition: "生态系统：生物群落与其物理环境的统一体。" },
+            { term: "Greenhouse Gas", definition: "温室气体：能够吸收和辐射红外线导致温室效应的气体，例如CO₂、CH₄等。" },
+            { term: "AQI", definition: "空气质量指数：用于描述空气质量状况的综合指标。" },
+            { term: "Point Source Pollution", definition: "点源污染：可确定排放位置的污染源，如工厂排放口。" },
+            { term: "Non-point Source Pollution", definition: "非点源污染：难以确定排放点的污染源，如农田径流。" },
+            { term: "Phytoremediation", definition: "植物修复：利用植物吸收或降解环境污染物的一种生态修复方法。" },
+            { term: "Circular Economy", definition: "循环经济：通过资源循环利用和价值最大化，减少浪费和环境影响。" },
+            { term: "E-waste", definition: "电子垃圾：废弃的电子设备，如手机、电脑、电池等。" },
+            { term: "Desalination", definition: "海水淡化：通过去除盐分将海水或苦咸水转化为淡水的过程。" },
+            { term: "Sedimentation", definition: "沉降：在水处理或环境净化中，通过静置使悬浮物沉降分离的方法。" },
+            { term: "Bioremediation", definition: "生物修复：利用微生物或植物等生物手段去除或分解污染物的过程。" },
+            { term: "Waste Hierarchy", definition: "废物管理层级：从最优到最差包括预防、再利用、再循环、能量回收和填埋。" },
+            { term: "Pyrolysis", definition: "热解：在高温和缺氧环境下分解有机物，生成合成气、焦油和固体残渣。" },
+        ];
+
+        // ======================
+        // 成就库
+        // ======================
+        const achievements = [
+            { name: "环保小先锋", description: "完成第一章游戏。", achieved: false },
+            { name: "连胜达人", description: "连续回答5个问题正确。", achieved: false },
+            { name: "环境学霸", description: "回答某章节所有问题正确。", achieved: false },
+            { name: "词汇通关", description: "学习10个以上词汇卡。", achieved: false },
+            { name: "榜上有名", description: "在排行榜中进入前5名。", achieved: false },
+            { name: "全章通关", description: "完成所有章节。", achieved: false },
+        ];
+
+        // 初始化变量
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let currentChapter = null;
+        let consecutiveCorrect = 0;
+        const totalChapters = 5; // 5个章节
+        let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
+
+        // 获取DOM元素
+        const mainMenu = document.getElementById('main-menu');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const competitiveModeBtn = document.getElementById('competitive-mode-btn');
+        const vocabBtn = document.getElementById('vocab-btn');
+        const achievementsBtn = document.getElementById('achievements-btn');
+        const leaderboardBtn = document.getElementById('leaderboard-btn');
+
+        const chapterSelect = document.getElementById('chapter-select');
+        const chapterButtons = document.querySelectorAll('.chapter-btn');
+        const backFromChapterBtn = document.getElementById('back-from-chapter-btn');
+
+        const gameContainer = document.getElementById('game-container');
+        const xinyu = document.getElementById('xinyu');
+        const ball = document.getElementById('ball');
+        const questionBox = document.getElementById('question-box');
+        const questionText = document.getElementById('question');
+        const answersDiv = document.getElementById('answers');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const nextBtn = document.getElementById('next-btn');
+        const returnMainBtn = document.getElementById('return-main-btn');
+        const progressBar = document.getElementById('progress-bar');
+
+        const vocabContainer = document.getElementById('vocab-container');
+        const vocabCards = document.getElementById('vocab-cards');
+        const closeVocabBtn = document.getElementById('close-vocab-btn');
+
+        const achievementsContainer = document.getElementById('achievements-container');
+        const achievementsList = document.getElementById('achievements-list');
+        const closeAchievementsBtn = document.getElementById('close-achievements-btn');
+
+        const leaderboardContainer = document.getElementById('leaderboard-container');
+        const leaderboardList = document.getElementById('leaderboard-list');
+        const closeLeaderboardBtn = document.getElementById('close-leaderboard-btn');
+
+        const competitiveContainer = document.getElementById('competitive-container');
+        const matchingDiv = document.getElementById('matching');
+        const matchedDiv = document.getElementById('matched');
+        const startCompetitionBtn = document.getElementById('start-competition-btn');
+        const competitionDiv = document.getElementById('competition');
+        const compProgressBar = document.getElementById('comp-progress-bar');
+        const compQuestionBox = document.getElementById('comp-question-box');
+        const compQuestionText = document.getElementById('comp-question');
+        const compAnswersDiv = document.getElementById('comp-answers');
+        const compFeedbackDiv = document.getElementById('comp-feedback');
+        const compFeedbackText = document.getElementById('comp-feedback-text');
+        const compNextBtn = document.getElementById('comp-next-btn');
+        const matchResultDiv = document.getElementById('match-result');
+        const matchResultText = document.getElementById('match-result-text');
+        const returnMainFromMatchBtn = document.getElementById('return-main-from-match-btn');
+
+        const scoreBoard = document.getElementById('score-board');
+        const timerDisplay = document.getElementById('timer');
+
+        // 添加动画关键帧（保持不变，用于部分动画）
+        const styleSheet = document.createElement("style");
+        styleSheet.type = "text/css";
+        styleSheet.innerText = `
+            @keyframes celebrate {
+                0% { transform: rotate(0deg); }
+                25% { transform: rotate(10deg); }
+                50% { transform: rotate(-10deg); }
+                75% { transform: rotate(10deg); }
+                100% { transform: rotate(0deg); }
+            }
+            @keyframes shake {
+                0% { transform: translate(0, 0); }
+                25% { transform: translate(-10px, -10px); }
+                50% { transform: translate(10px, -10px); }
+                75% { transform: translate(-10px, 10px); }
+                100% { transform: translate(10px, 10px); }
+            }
+            @keyframes kick {
+                0% { transform: translateX(0); }
+                50% { transform: translateX(20px); }
+                100% { transform: translateX(0); }
+            }
+            @keyframes shoot-own-goal {
+                0% { transform: translateY(0); }
+                50% { transform: translateY(30px); }
+                100% { transform: translateY(0); }
+            }
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+            .celebrate {
+                animation: celebrate 0.5s ease-in-out;
+            }
+            .shake {
+                animation: shake 0.5s ease-in-out;
+            }
+            .kick {
+                animation: kick 0.5s ease-in-out;
+            }
+            .shoot-own-goal {
+                animation: shoot-own-goal 0.5s ease-in-out;
+            }
+            .matching-animation {
+                width: 100px;
+                height: 100px;
+                border: 10px solid #fff;
+                border-top: 10px solid #000080;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin-bottom: 20px;
+            }
+        `;
+        document.head.appendChild(styleSheet);
+
+        // ======================
+        // 生成词汇卡
+        // ======================
+        function generateVocabCards() {
+            vocabCards.innerHTML = '';
+            vocabulary.forEach((vocab) => {
+                const card = document.createElement('div');
+                card.classList.add('vocab-card');
+                card.innerHTML = `
+                    <div class="vocab-term">${vocab.term}</div>
+                    <div class="vocab-definition">${vocab.definition}</div>
+                `;
+                card.addEventListener('click', () => {
+                    card.classList.toggle('flipped');
+                });
+                vocabCards.appendChild(card);
+            });
+        }
+
+        // ======================
+        // 生成成就列表
+        // ======================
+        function generateAchievements() {
+            achievementsList.innerHTML = '';
+            achievements.forEach((achv) => {
+                const li = document.createElement('li');
+                li.classList.add('list-item');
+                li.innerHTML = `
+                    <strong>${achv.name}</strong><br>
+                    ${achv.description} <br>
+                    ${achv.achieved ? '✅ 已达成' : '❌ 未达成'}
+                `;
+                achievementsList.appendChild(li);
+            });
+        }
+
+        // ======================
+        // 更新成就函数
+        // ======================
+        function updateAchievements() {
+            achievements.forEach(achv => {
+                if (!achv.achieved) {
+                    // 完成第一章
+                    if (achv.name === "环保小先锋" && currentChapter >= 1) {
+                        achv.achieved = true;
+                    }
+                    // 连续回答5个正确
+                    if (achv.name === "连胜达人" && consecutiveCorrect >= 5) {
+                        achv.achieved = true;
+                    }
+                    // 回答本章节全部正确
+                    if (achv.name === "环境学霸" && score >= getTotalQuestionsByChapter(currentChapter)) {
+                        achv.achieved = true;
+                    }
+                    // 学习10个词汇卡
+                    if (achv.name === "词汇通关" && vocabulary.length >= 10) {
+                        achv.achieved = true;
+                    }
+                    // 完成所有章节
+                    if (achv.name === "全章通关" && currentChapter >= totalChapters) {
+                        achv.achieved = true;
+                    }
+                }
+            });
+            generateAchievements();
+        }
+
+        // ======================
+        // 生成排行榜
+        // ======================
+        function generateLeaderboard() {
+            leaderboardList.innerHTML = '';
+            // 排序并取前10名
+            const sortedLeaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
+            sortedLeaderboard.forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.classList.add('list-item');
+                li.textContent = `${index + 1}. ${entry.name} - ${entry.score}`;
+                leaderboardList.appendChild(li);
+            });
+        }
+
+        // 保存排行榜
+        function saveLeaderboard(name, score) {
+            leaderboard.push({ name, score });
+            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
+            generateLeaderboard();
+            updateAchievements();
+        }
+
+        // 获取当前章节的总问题数
+        function getTotalQuestionsByChapter(chapter) {
+            return questions.filter(q => q.chapter === chapter).length;
+        }
+
+        // 初始化词汇卡、成就、排行榜
+        generateVocabCards();
+        generateAchievements();
+        generateLeaderboard();
+
+        // ======================
+        // 导航按钮事件
+        // ======================
+        startGameBtn.addEventListener('click', () => {
+            mainMenu.style.display = 'none';
+            chapterSelect.style.display = 'flex';
+        });
+
+        competitiveModeBtn.addEventListener('click', () => {
+            mainMenu.style.display = 'none';
+            competitiveContainer.style.display = 'flex';
+            startMatching();
+        });
+
+        vocabBtn.addEventListener('click', () => {
+            mainMenu.style.display = 'none';
+            vocabContainer.style.display = 'block';
+        });
+
+        achievementsBtn.addEventListener('click', () => {
+            mainMenu.style.display = 'none';
+            achievementsContainer.style.display = 'block';
+        });
+
+        leaderboardBtn.addEventListener('click', () => {
+            mainMenu.style.display = 'none';
+            leaderboardContainer.style.display = 'block';
+        });
+
+        backFromChapterBtn.addEventListener('click', () => {
+            chapterSelect.style.display = 'none';
+            mainMenu.style.display = 'flex';
+        });
+
+        closeVocabBtn.addEventListener('click', () => {
+            vocabContainer.style.display = 'none';
+            mainMenu.style.display = 'flex';
+        });
+
+        closeAchievementsBtn.addEventListener('click', () => {
+            achievementsContainer.style.display = 'none';
+            mainMenu.style.display = 'flex';
+        });
+
+        closeLeaderboardBtn.addEventListener('click', () => {
+            leaderboardContainer.style.display = 'none';
+            mainMenu.style.display = 'flex';
+        });
+
+        returnMainBtn.addEventListener('click', () => {
+            gameContainer.style.display = 'none';
+            mainMenu.style.display = 'flex';
+        });
+
+        returnMainFromMatchBtn.addEventListener('click', () => {
+            matchResultDiv.style.display = 'none';
+            competitiveContainer.style.display = 'none';
+            mainMenu.style.display = 'flex';
+        });
+
+        // ======================
+        // 章节选择按钮事件
+        // ======================
+        chapterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const selectedChapter = parseInt(button.getAttribute('data-chapter'));
+                currentChapter = selectedChapter;
+                mainMenu.style.display = 'none';
+                chapterSelect.style.display = 'none';
+                gameContainer.style.display = 'block';
+                startChapter();
+            });
+        });
+
+        // ======================
+        // 游戏逻辑
+        // ======================
+        function startChapter() {
+            currentQuestionIndex = 0;
+            score = 0;
+            consecutiveCorrect = 0;
+            progressBar.style.width = '0%';
+            xinyu.style.left = '50px'; // 重置辛鱼的位置
+            moveBall();
+        }
+
+        function moveBall() {
+            const currentChapterQuestions = questions.filter(q => q.chapter === currentChapter);
+            if (currentQuestionIndex >= currentChapterQuestions.length) {
+                endGame();
+                return;
+            }
+            const q = currentChapterQuestions[currentQuestionIndex];
+            // 设置进度条
+            const progress = (currentQuestionIndex / getTotalQuestionsByChapter(currentChapter)) * 100;
+            progressBar.style.width = progress + '%';
+            // 随机位置
+            const randomPositionX = Math.floor(Math.random() * (gameContainer.clientWidth - 100)) + 50;
+            const randomPositionY = Math.floor(Math.random() * (gameContainer.clientHeight - 200)) + 100;
+            ball.style.left = randomPositionX + 'px';
+            ball.style.bottom = randomPositionY + 'px';
+            // 添加动画效果
+            ball.style.transition = 'left 1s, bottom 1s';
+            setTimeout(triggerQuestion, 1000);
+        }
+
+        function triggerQuestion() {
+            questionBox.style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const currentChapterQuestions = questions.filter(q => q.chapter === currentChapter);
+            const q = currentChapterQuestions[currentQuestionIndex];
+            if (!q) {
+                endGame();
+                return;
+            }
+            questionText.innerHTML = `<strong>${q.question}</strong><br><em>${q.questionCN}</em>`;
+            answersDiv.innerHTML = '';
+            q.answers.forEach((ans, index) => {
+                const btn = document.createElement('button');
+                btn.textContent = ans;
+                btn.classList.add('answer-btn');
+                btn.addEventListener('click', () => checkAnswer(index));
+                answersDiv.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected) {
+            const currentChapterQuestions = questions.filter(q => q.chapter === currentChapter);
+            const q = currentChapterQuestions[currentQuestionIndex];
+            questionBox.style.display = 'none';
+            if (selected === q.correct) {
+                score++;
+                consecutiveCorrect++;
+                feedbackText.innerHTML = `<strong>回答正确！</strong><br>辛鱼漂亮地射门得分！<br><em>${q.explanation}</em>`;
+                triggerPositiveEvent();
+            } else {
+                consecutiveCorrect = 0;
+                feedbackText.innerHTML = `<strong>回答错误！</strong><br>辛鱼失误，乌龙球！<br><em>${q.explanation}</em>`;
+                triggerNegativeEvent();
+            }
+            updateAchievements();
+            feedback.style.display = 'block';
+            if (currentQuestionIndex === getTotalQuestionsByChapter(currentChapter) - 1) {
+                // 最后一题后隐藏“继续”按钮，显示“返回主菜单”按钮
+                nextBtn.style.display = 'none';
+                returnMainBtn.style.display = 'inline-block';
+            }
+        }
+
+        function triggerPositiveEvent() {
+            // 向右移动辛鱼
+            const newLeft = Math.min(gameContainer.clientWidth - 100, parseInt(xinyu.style.left) + 100);
+            xinyu.style.left = newLeft + 'px';
+            // 添加庆祝动画
+            xinyu.classList.add('celebrate');
+            setTimeout(() => {
+                xinyu.classList.remove('celebrate');
+            }, 500);
+        }
+
+        function triggerNegativeEvent() {
+            // 向左移动辛鱼
+            const newLeft = Math.max(50, parseInt(xinyu.style.left) - 50);
+            xinyu.style.left = newLeft + 'px';
+            // 添加失误动画
+            xinyu.classList.add('shake');
+            setTimeout(() => {
+                xinyu.classList.remove('shake');
+            }, 500);
+        }
+
+        function endGame() {
+            feedbackText.innerHTML = `<strong>本章节结束！</strong><br>你的得分是 ${score} / ${questions.filter(q => q.chapter === currentChapter).length}`;
+            nextBtn.style.display = 'none';
+            returnMainBtn.style.display = 'inline-block';
+            feedback.style.display = 'block';
+            // 保存到排行榜
+            const playerName = prompt("请输入你的名字:", "玩家");
+            if (playerName) {
+                saveLeaderboard(playerName, score);
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            feedback.style.display = 'none';
+            currentQuestionIndex++;
+            moveBall();
+        });
+
+        // ======================
+        // 竞技模式逻辑
+        // ======================
+        let competitionQuestions = [];
+        let compCurrentQuestionIndex = 0;
+        let playerScoreComp = 0;
+        let opponentScoreComp = 0;
+        let timer;
+        let timeLeft = 15; // 每题15秒
+
+        function startMatching() {
+            matchingDiv.style.display = 'block';
+            matchedDiv.style.display = 'none';
+            competitionDiv.style.display = 'none';
+            matchResultDiv.style.display = 'none';
+            // 模拟匹配时间
+            setTimeout(() => {
+                matchingDiv.style.display = 'none';
+                matchedDiv.style.display = 'block';
+            }, 3000); // 3秒匹配动画
+        }
+
+        startCompetitionBtn.addEventListener('click', () => {
+            matchedDiv.style.display = 'none';
+            competitionDiv.style.display = 'block';
+            // 从问题库中随机抽取10个难度为hard或medium的问题
+            const hardOrMedium = questions.filter(q => q.difficulty === 'hard' || q.difficulty === 'medium');
+            competitionQuestions = shuffle(hardOrMedium).slice(0, 10);
+            compCurrentQuestionIndex = 0;
+            playerScoreComp = 0;
+            opponentScoreComp = 0;
+            compProgressBar.style.width = '0%';
+            updateScoreBoard();
+            loadCompQuestion();
+        });
+
+        function loadCompQuestion() {
+            if (compCurrentQuestionIndex >= competitionQuestions.length) {
+                endCompetition();
+                return;
+            }
+            const q = competitionQuestions[compCurrentQuestionIndex];
+            compQuestionText.innerHTML = `<strong>${q.question}</strong><br><em>${q.questionCN}</em>`;
+            compAnswersDiv.innerHTML = '';
+            q.answers.forEach((ans, index) => {
+                const btn = document.createElement('button');
+                btn.textContent = ans;
+                btn.classList.add('answer-btn');
+                btn.addEventListener('click', () => checkCompAnswer(index));
+                compAnswersDiv.appendChild(btn);
+            });
+            competitionDiv.scrollTop = 0;
+            compQuestionBox.style.display = 'block';
+            startTimer();
+        }
+
+        function checkCompAnswer(selected) {
+            clearInterval(timer);
+            const q = competitionQuestions[compCurrentQuestionIndex];
+            compQuestionBox.style.display = 'none';
+            // 玩家回答
+            if (selected === q.correct) {
+                playerScoreComp++;
+                compFeedbackText.innerHTML = `<strong>你回答正确！</strong><br><em>${q.explanation}</em>`;
+                triggerCompPositiveEvent();
+            } else {
+                compFeedbackText.innerHTML = `<strong>你回答错误！</strong><br><em>${q.explanation}</em>`;
+                triggerCompNegativeEvent();
+            }
+            // 对手回答（模拟）
+            setTimeout(() => {
+                const opponentAnswer = getOpponentAnswer(q);
+                if (opponentAnswer === q.correct) {
+                    opponentScoreComp++;
+                    compFeedbackText.innerHTML += `<br><strong>环境老师回答正确！</strong>`;
+                } else {
+                    compFeedbackText.innerHTML += `<br><strong>环境老师回答错误！</strong>`;
+                }
+                updateScoreBoard();
+                compFeedbackDiv.style.display = 'block';
+                // 更新进度条
+                const progress = ((compCurrentQuestionIndex + 1) / competitionQuestions.length) * 100;
+                compProgressBar.style.width = progress + '%';
+                compCurrentQuestionIndex++;
+            }, 500); 
+        }
+
+        function getOpponentAnswer(q) {
+            // 简单模拟对手的回答：70% 几率答对
+            if (Math.random() < 0.7) {
+                return q.correct;
+            } else {
+                return getRandomIncorrectAnswer(q.correct, q.answers.length);
+            }
+        }
+
+        function getRandomIncorrectAnswer(correctIndex, totalAnswers) {
+            const possible = [];
+            for (let i = 0; i < totalAnswers; i++) {
+                if (i !== correctIndex) possible.push(i);
+            }
+            return possible[Math.floor(Math.random() * possible.length)];
+        }
+
+        function triggerCompPositiveEvent() {
+            xinyu.classList.add('celebrate');
+            setTimeout(() => {
+                xinyu.classList.remove('celebrate');
+            }, 500);
+        }
+
+        function triggerCompNegativeEvent() {
+            xinyu.classList.add('shake');
+            setTimeout(() => {
+                xinyu.classList.remove('shake');
+            }, 500);
+        }
+
+        function endCompetition() {
+            competitionDiv.style.display = 'none';
+            matchResultDiv.style.display = 'block';
+            if (playerScoreComp > opponentScoreComp) {
+                matchResultText.innerHTML = `<strong>恭喜！你赢了环境老师！</strong><br>你的得分: ${playerScoreComp} <br>对手得分: ${opponentScoreComp}`;
+            } else if (playerScoreComp < opponentScoreComp) {
+                matchResultText.innerHTML = `<strong>遗憾！你输了！</strong><br>你的得分: ${playerScoreComp} <br>对手得分: ${opponentScoreComp}`;
+            } else {
+                matchResultText.innerHTML = `<strong>平局！</strong><br>你的得分: ${playerScoreComp} <br>对手得分: ${opponentScoreComp}`;
+            }
+            // 可在此添加额外奖励或成就
+        }
+
+        compNextBtn.addEventListener('click', () => {
+            compFeedbackDiv.style.display = 'none';
+            loadCompQuestion();
+        });
+
+        // 计时器
+        function startTimer() {
+            timeLeft = 15;
+            timerDisplay.textContent = `时间: ${timeLeft}s`;
+            timer = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = `时间: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    // 自动判定为错误
+                    const q = competitionQuestions[compCurrentQuestionIndex];
+                    compQuestionBox.style.display = 'none';
+                    compFeedbackText.innerHTML = `<strong>时间到！</strong><br>你未能及时回答。<br><em>${q.explanation}</em>`;
+                    triggerCompNegativeEvent();
+                    // 对手回答（模拟）
+                    setTimeout(() => {
+                        const opponentAnswer = getOpponentAnswer(q);
+                        if (opponentAnswer === q.correct) {
+                            opponentScoreComp++;
+                            compFeedbackText.innerHTML += `<br><strong>环境老师回答正确！</strong>`;
+                        } else {
+                            compFeedbackText.innerHTML += `<br><strong>环境老师回答错误！</strong>`;
+                        }
+                        updateScoreBoard();
+                        compFeedbackDiv.style.display = 'block';
+                        // 更新进度条
+                        const progress = ((compCurrentQuestionIndex + 1) / competitionQuestions.length) * 100;
+                        compProgressBar.style.width = progress + '%';
+                        compCurrentQuestionIndex++;
+                    }, 500);
+                }
+            }, 1000);
+        }
+
+        function updateScoreBoard() {
+            scoreBoard.textContent = `你: ${playerScoreComp} | 环境老师: ${opponentScoreComp}`;
+        }
+
+        // 洗牌函数
+        function shuffle(array) {
+            let currentIndex = array.length, temporaryValue, randomIndex;
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
+            }
+            return array;
+        }
+    </script>
+
+</body>
+</html>

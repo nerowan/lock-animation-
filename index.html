@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>京杭大运河 - 动画 & 问答游戏（完整版本）</title>
+  <title>京杭大运河 - 动画 & 问答游戏（完整加强版）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     /* ========== 全局 & 重置 ========== */
@@ -39,6 +39,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      position: relative;
     }
     #mainMenu h1 {
       font-size: 2rem;
@@ -62,6 +63,23 @@
     }
     .menu-btn:hover {
       background: #0277bd;
+    }
+    /* 神秘小游戏按钮，固定在右下角 */
+    #mysteryGameBtn {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      padding: 10px 15px;
+      background: #e91e63;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+    }
+    #mysteryGameBtn:hover {
+      background: #d81b60;
     }
 
     /* ========== 动画页面容器 ========== */
@@ -161,6 +179,13 @@
       font-size: 1.1rem;
       color: #333;
     }
+    /* 排行榜 */
+    .leaderboard {
+      margin-top: 10px;
+      text-align: center;
+      color: #555;
+      font-size: 0.95rem;
+    }
 
     /* ========== 响应式适配手机 ========== */
     @media (max-width: 600px) {
@@ -170,6 +195,10 @@
       .menu-btn {
         width: 160px;
         font-size: 0.9rem;
+      }
+      #mysteryGameBtn {
+        font-size: 0.9rem;
+        padding: 8px 10px;
       }
       .quiz-question {
         padding: 10px;
@@ -301,6 +330,25 @@
       border-radius: 12px;
       padding: 20px;
       position: relative;
+    }
+
+    /* ========== “进入下一部分”按钮 ========== */
+    .next-part-btn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 16px;
+      background: #8bc34a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: background 0.3s;
+      z-index: 998; /* 在文字卡片之上 */
+    }
+    .next-part-btn:hover {
+      background: #7cb342;
     }
 
     /* ========== 场景1 样式 ========== */
@@ -508,7 +556,7 @@
       height: 40px;
       background-color: #8d6e63;
       border-radius: 40px 40px 0 0;
-      left: -15%; /* 船在左外 */
+      left: -15%;
       transition: left 1.5s ease, bottom 1.5s ease;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
@@ -545,6 +593,49 @@
     }
     .status-bar span {
       margin-right: 10px;
+    }
+    /* “游戏说明”按钮和弹窗 */
+    #btnShowGameHelp {
+      width: 100%;
+      margin-top: 6px;
+      background: #9c27b0;
+    }
+    #btnShowGameHelp:hover {
+      background: #7b1fa2;
+    }
+    .help-overlay {
+      position: absolute;
+      top: 50px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      background: rgba(255,255,255,0.9);
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      padding: 20px;
+      overflow-y: auto;
+      display: none; /* 初始隐藏 */
+      z-index: 999;
+    }
+    .help-overlay h4 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .help-overlay p {
+      margin-bottom: 10px;
+      color: #555;
+      line-height: 1.5;
+    }
+    .help-overlay button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 6px 10px;
+      background: #f44336;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
 
     /* ========== 场景5：运河意义 ========== */
@@ -662,6 +753,8 @@
     <h1>京杭大运河 - 动画 & 问答游戏</h1>
     <button class="menu-btn" id="btnGoAnimation">进入动画</button>
     <button class="menu-btn" id="btnGoQuiz">问答游戏</button>
+    <!-- 神秘小游戏按钮(右下角) -->
+    <button id="mysteryGameBtn" onclick="location.href='game.html'">神秘小游戏</button>
   </div>
 
   <!-- ========== 动画页面 ========== -->
@@ -691,6 +784,8 @@
             保护沿河地区的安全。
           </p>
         </div>
+        <!-- “进入下一部分”按钮 -->
+        <button class="next-part-btn" id="scene1NextBtn">进入下一部分</button>
       </div>
 
       <!-- 场景2：水闸的基本概念 -->
@@ -718,7 +813,7 @@
               <h4>水闸功能(背面)</h4>
               <p style="margin: 0 20px; text-align:center;">
                 用于控制水位和水流，分洪防汛，  
-                以及帮助船只克服上下游水位差
+                帮助船只克服上下游水位差
               </p>
             </div>
           </div>
@@ -740,6 +835,7 @@
             其功能包括帮助船只克服上下游水位差，调节水流量，以及在汛期分洪或防止洪水。
           </p>
         </div>
+        <button class="next-part-btn" id="scene2NextBtn">进入下一部分</button>
       </div>
 
       <!-- 场景3：水闸的类型 -->
@@ -778,6 +874,7 @@
             </p>
           </div>
         </div>
+        <button class="next-part-btn" id="scene3NextBtn">进入下一部分</button>
       </div>
 
       <!-- 场景4：水闸运作方式 + 交互式小游戏 -->
@@ -792,7 +889,7 @@
         </div>
 
         <div class="lock-system fade-in">
-          <!-- 游戏操作面板 -->
+          <!-- 左侧操作面板 -->
           <div class="sidebar-game">
             <h3>水闸操作小游戏</h3>
             <p>请按正确顺序操作阀门与闸门，让船只从左到右顺利通过。</p>
@@ -815,7 +912,7 @@
               <button id="closeRightGate">关闭下闸门</button>
             </div>
             <hr>
-            <p>当船到达右侧，即成功完成该场景！</p>
+            <button id="btnShowGameHelp">游戏说明</button>
             <button id="resetGame">重新开始</button>
             <div class="status-bar">
               <span>时间：<span id="timerText">0</span>s</span>
@@ -834,8 +931,26 @@
               <div class="valve valve-top" id="valveTop" title="上排水阀"></div>
               <div class="valve valve-bottom" id="valveBottom" title="下排水阀"></div>
             </div>
+            <!-- 游戏说明弹窗 -->
+            <div class="help-overlay" id="gameHelpOverlay">
+              <button id="btnCloseHelp">X</button>
+              <h4>水闸操作说明</h4>
+              <p>
+                1. 开启上排水阀，让闸室水位降到与下游持平（约40%）。
+                <br/>2. 打开上闸门，让船进闸室，然后关闭上闸门。
+                <br/>3. 开启下排水阀，让闸室水位上升到上游水平（80%）。
+                <br/>4. 关闭下排水阀后，打开下闸门，让船驶出。
+                <br/>只要顺序正确，船就能顺利通行。
+              </p>
+              <p>
+                若任何步骤出错，会提示失败，需要点“重新开始”再来。
+                <br/>快来体验古代智慧与现代科技的结合吧！
+              </p>
+            </div>
           </div>
         </div>
+        <!-- “进入下一部分”按钮，只有在游戏完成后才有效果，但按需求可随时点击，立即跳转下场景 -->
+        <button class="next-part-btn" id="scene4NextBtn">进入下一部分</button>
       </div>
 
       <!-- 场景5：京杭大运河的意义 -->
@@ -852,6 +967,7 @@
           <div class="town-boat"></div>
           <div class="town-building"></div>
         </div>
+        <button class="next-part-btn" id="scene5NextBtn">进入下一部分</button>
       </div>
 
       <!-- 场景6：结尾 -->
@@ -883,7 +999,7 @@
       <!-- 示例题1 -->
       <div class="quiz-question" data-answer="1">
         <h3>1. 大运河主要功能不包括以下哪项？</h3>
-        <label class="option"><input type="radio" name="q1" value="1"> 用于火箭、飞行器发射</label><br/>
+        <label class="option"><input type="radio" name="q1" value="1"> 火箭、飞行器发射</label><br/>
         <label class="option"><input type="radio" name="q1" value="2"> 运输货物与人员</label><br/>
         <label class="option"><input type="radio" name="q1" value="3"> 分洪防汛</label><br/>
         <label class="option"><input type="radio" name="q1" value="4"> 调节水位</label>
@@ -907,6 +1023,8 @@
       
       <button class="quiz-submit-btn" id="quizSubmitBtn">提交答案</button>
       <div class="quiz-result" id="quizResult"></div>
+      <!-- 排行榜区域 -->
+      <div class="leaderboard" id="leaderboardArea"></div>
     </div>
   </div>
 </div>
@@ -925,6 +1043,7 @@
   // 问答
   const quizSubmitBtn = document.getElementById('quizSubmitBtn');
   const quizResult = document.getElementById('quizResult');
+  const leaderboardArea = document.getElementById('leaderboardArea');
 
   // 动画容器
   const animationContainer = document.getElementById('animationContainer');
@@ -938,6 +1057,7 @@
     document.getElementById('scene5'),
     document.getElementById('scene6'),
   ];
+
   let currentSceneIndex = 0;
 
   // ========== 显示/隐藏不同页面 ========== 
@@ -950,7 +1070,6 @@
     mainMenu.classList.add('hidden');
     animationPage.classList.remove('hidden');
     quizPage.classList.add('hidden');
-    // 每次进入动画时，可重新初始化场景
     startScenePlay();
   }
   function showQuizPage() {
@@ -959,6 +1078,7 @@
     quizPage.classList.remove('hidden');
     // 重置问答结果
     quizResult.textContent = "";
+    leaderboardArea.textContent = "";
   }
 
   btnGoAnimation.addEventListener('click', showAnimationPage);
@@ -986,10 +1106,30 @@
       }
     });
 
-    quizResult.textContent = `本次答对 ${correctCount} / ${totalCount} 题`;
+    quizResult.textContent = `本次答对：${correctCount} / ${totalCount} 题`;
+
+    // 模拟“杨金老师、辛宇老师、胡明波老师”成绩(可按需改写)
+    const teacherScores = [
+      { name: '杨金老师', score: totalCount }, 
+      { name: '辛宇老师', score: totalCount-1 },
+      { name: '胡明波老师', score: Math.max(1, totalCount-1) },
+    ];
+
+    // 生成排行榜
+    let rankingText = `<p>排行榜(与老师对比)：</p><ul style="list-style:none;padding:0;">`;
+    // 自己的分数 
+    rankingText += `<li>你：${correctCount} / ${totalCount}</li>`;
+    teacherScores.forEach(ts => {
+      rankingText += `<li>${ts.name}：${ts.score} / ${totalCount}</li>`;
+    });
+    rankingText += `</ul>`;
+    leaderboardArea.innerHTML = rankingText;
   });
 
+
   // ========== 动画场景自动切换逻辑 ========== 
+  let sceneTimers = []; // 存储场景自动切换的计时器
+
   function showScene(idx) {
     scenes.forEach((sc, i) => {
       sc.classList.remove('active');
@@ -1009,47 +1149,65 @@
     }, 1500);
   }
 
-  // 为场景4水闸游戏：完成后手动切到场景5
+  // 手动跳场景：清除对应timer并直接进入下一场景
+  function skipToNextScene() {
+    if(currentSceneIndex < scenes.length - 1) {
+      // 清除当前场景的timer
+      clearTimeout(sceneTimers[currentSceneIndex]);
+      // 手动调用fade
+      fadeTransition(currentSceneIndex, currentSceneIndex + 1);
+      currentSceneIndex++;
+      // 如果是场景4，需要初始化游戏等逻辑？
+      if(currentSceneIndex === 3) {
+        initGame();
+      }
+      else if(currentSceneIndex === 4) {
+        // 进入场景5
+        setTimeout(() => {
+          fadeTransition(4, 5);
+          currentSceneIndex = 5;
+        }, 30000);
+      }
+    }
+  }
+
+  // 切到场景5
   function goToScene5() {
     fadeTransition(3, 4);
     currentSceneIndex = 4;
-    // 然后场景5停留30秒 -> 场景6
-    setTimeout(() => {
+    // 场景5 -> 30秒 -> 场景6
+    sceneTimers[4] = setTimeout(() => {
       fadeTransition(4, 5);
       currentSceneIndex = 5;
-      // 场景6可一直停留
     }, 30000);
   }
 
-  // ========== 启动场景播放：场景1 ~ 3自动切，场景4玩游戏 -> 成功后切场景5->6 ========== 
-  let sceneTimers = []; // 存储各场景的 setTimeout ID，进入动画时重置
-
   function startScenePlay() {
-    // 先清理
-    sceneTimers.forEach(tid => clearTimeout(tid));
+    // 清理之前定时器
+    sceneTimers.forEach(t => clearTimeout(t));
     sceneTimers = [];
-    // 重置
+
     currentSceneIndex = 0;
     showScene(0);
 
-    // 场景1 -> 30秒 -> 场景2
-    sceneTimers.push(setTimeout(() => {
+    // 场景1 -> 30秒 -> 2
+    sceneTimers[0] = setTimeout(() => {
       fadeTransition(0,1);
       currentSceneIndex = 1;
-    }, 30000));
+    }, 30000);
 
-    // 场景2 -> 30秒 -> 场景3
-    sceneTimers.push(setTimeout(() => {
+    // 场景2 -> 30秒 -> 3
+    sceneTimers[1] = setTimeout(() => {
       fadeTransition(1,2);
       currentSceneIndex = 2;
-    }, 60000));
+    }, 60000);
 
-    // 场景3 -> 30秒 -> 场景4(游戏)
-    sceneTimers.push(setTimeout(() => {
+    // 场景3 -> 30秒 -> 4(游戏)
+    sceneTimers[2] = setTimeout(() => {
       fadeTransition(2,3);
       currentSceneIndex = 3;
-      initGame(); // 启动水闸小游戏
-    }, 90000));
+      initGame();
+    }, 90000);
   }
 
   // ========== 场景4：水闸游戏逻辑 ========== 
@@ -1083,6 +1241,18 @@
   const timerText = document.getElementById('timerText');
   const stepsText = document.getElementById('stepsText');
   const gameStatus = document.getElementById('gameStatus');
+
+  // 游戏说明弹窗
+  const gameHelpOverlay = document.getElementById('gameHelpOverlay');
+  const btnShowGameHelp = document.getElementById('btnShowGameHelp');
+  const btnCloseHelp = document.getElementById('btnCloseHelp');
+
+  btnShowGameHelp.addEventListener('click', () => {
+    gameHelpOverlay.style.display = 'block';
+  });
+  btnCloseHelp.addEventListener('click', () => {
+    gameHelpOverlay.style.display = 'none';
+  });
 
   function disableAllGameBtns(ms=1500) {
     [
@@ -1148,13 +1318,99 @@
       isGameOver = true;
       gameStatus.textContent = `通关！耗时${timeElapsed}s，操作${stepCount}次`;
       clearInterval(timerInterval);
-      alert(`恭喜你完成水闸操作！\n耗时：${timeElapsed}秒\n操作：${stepCount}次\n即将进入下一个场景...`);
-      // 稍等1.5秒后切场景5
-      setTimeout(goToScene5, 1500);
+      alert(`恭喜你完成水闸操作！\n耗时：${timeElapsed}秒\n操作：${stepCount}次\n可等待自动跳转或点击“进入下一部分”`);
+      // 通关后，还会等待auto，但用户可点“进入下一部分”立即跳 scene5
     }
   }
 
-  // 具体操作
+  // ========== “进入下一部分”按钮事件 ========== 
+  // 在每个场景末尾添加skipToNextScene()
+  const scene1NextBtn = document.getElementById('scene1NextBtn');
+  const scene2NextBtn = document.getElementById('scene2NextBtn');
+  const scene3NextBtn = document.getElementById('scene3NextBtn');
+  const scene4NextBtn = document.getElementById('scene4NextBtn');
+  const scene5NextBtn = document.getElementById('scene5NextBtn');
+
+  scene1NextBtn.addEventListener('click', () => {
+    skipToNextScene();
+  });
+  scene2NextBtn.addEventListener('click', () => {
+    skipToNextScene();
+  });
+  scene3NextBtn.addEventListener('click', () => {
+    skipToNextScene();
+  });
+  scene4NextBtn.addEventListener('click', () => {
+    skipToNextScene(); 
+  });
+  scene5NextBtn.addEventListener('click', () => {
+    skipToNextScene();
+  });
+
+  // ========== 手动跳过当前场景，进入下一个场景 ========== 
+  function skipToNextScene() {
+    // 如果未到最后一个场景，则可以跳转
+    if(currentSceneIndex < scenes.length - 1) {
+      // 清理本场景定时器
+      clearTimeout(sceneTimers[currentSceneIndex]);
+      // fade to next
+      fadeTransition(currentSceneIndex, currentSceneIndex + 1);
+      currentSceneIndex++;
+      // 如果跳到场景4，就初始化游戏
+      if(currentSceneIndex === 3) {
+        initGame();
+      }
+      // 如果是从场景4跳到场景5，需要设置30s后自动到6
+      if(currentSceneIndex === 4) {
+        sceneTimers[4] = setTimeout(() => {
+          fadeTransition(4, 5);
+          currentSceneIndex = 5;
+        }, 30000);
+      }
+    }
+  }
+
+  // ========== 切到场景5(游戏完成后自动) ========== 
+  function goToScene5() {
+    fadeTransition(3, 4);
+    currentSceneIndex = 4;
+    // 场景5 -> 30秒 -> 场景6
+    sceneTimers[4] = setTimeout(() => {
+      fadeTransition(4, 5);
+      currentSceneIndex = 5;
+    }, 30000);
+  }
+
+  // ========== 启动场景播放：场景1 ~ 3自动切，4(游戏) -> 完成后手动or自动到5->6 ========== 
+  function startScenePlay() {
+    // 清理之前定时器
+    sceneTimers.forEach(t => clearTimeout(t));
+    sceneTimers = [];
+
+    currentSceneIndex = 0;
+    showScene(0);
+
+    // 场景1 -> 30秒 -> 场景2
+    sceneTimers[0] = setTimeout(() => {
+      fadeTransition(0,1);
+      currentSceneIndex = 1;
+    }, 30000);
+
+    // 场景2 -> 30秒 -> 场景3
+    sceneTimers[1] = setTimeout(() => {
+      fadeTransition(1,2);
+      currentSceneIndex = 2;
+    }, 60000);
+
+    // 场景3 -> 30秒 -> 场景4(游戏)
+    sceneTimers[2] = setTimeout(() => {
+      fadeTransition(2,3);
+      currentSceneIndex = 3;
+      initGame();
+    }, 90000);
+  }
+
+  // ========== 游戏按钮事件 ========== 
   openTopValveBtn.addEventListener('click', () => {
     if(isGameOver) return;
     addStep();
@@ -1298,7 +1554,7 @@
     initGame();
   });
 
-  // ========== 默认显示主菜单 ========== 
+  // 默认显示主菜单
   showMainMenu();
 </script>
 </body>

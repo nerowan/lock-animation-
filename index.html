@@ -2,43 +2,209 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>探秘京杭大运河 - 动画与交互式水闸游戏</title>
+  <title>京杭大运河 - 动画 & 问答游戏（完整版本）</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* ===================== 全局重置与基础 ===================== */
+    /* ========== 全局 & 重置 ========== */
     * {
-      margin: 0;
-      padding: 0;
+      margin: 0; 
+      padding: 0; 
       box-sizing: border-box;
     }
     html, body {
       width: 100%;
       height: 100%;
-      overflow: hidden; /* 全屏动画，不出现滚动条 */
-      background-color: #f0f8ff;
+      overflow: hidden; /* 固定全屏 */
       font-family: "Microsoft YaHei", sans-serif;
-      position: relative;
+      background: #b3d9ff;
     }
+    /* 用于切换页面显示与隐藏 */
+    .hidden {
+      display: none !important;
+    }
+
+    /* ========== 主容器 ========== */
     #app {
       width: 100%;
       height: 100%;
       position: relative;
-      background: #b3d9ff; /* 默认天空蓝背景 */
-      perspective: 1000px; /* 部分3D动画用 */
     }
 
-    /* 场景的基本结构：绝对定位、全屏 */
-    .scene {
+    /* ========== 主菜单 ========== */
+    #mainMenu {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(to right, #4fc3f7, #81d4fa);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #mainMenu h1 {
+      font-size: 2rem;
+      color: #fff;
+      margin-bottom: 30px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+    .menu-btn {
+      width: 200px;
+      padding: 15px;
+      margin: 10px;
+      font-size: 1rem;
+      color: #fff;
+      background: #0288d1;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    }
+    .menu-btn:hover {
+      background: #0277bd;
+    }
+
+    /* ========== 动画页面容器 ========== */
+    #animationPage {
       width: 100%;
       height: 100%;
       position: absolute;
-      top: 0; left: 0;
-      display: none; /* 默认隐藏 */
+      top:0;
+      left:0;
+      background: #b3d9ff;
+    }
+    /* 返回主菜单按钮 */
+    .backToMenuBtn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 8px 12px;
+      background: #f44336;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      z-index: 999;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      transition: background 0.3s;
+    }
+    .backToMenuBtn:hover {
+      background: #d32f2f;
+    }
+
+    /* ========== 问答游戏页面容器 ========== */
+    #quizPage {
+      width: 100%;
+      height: 100%;
+      background: #eceff1;
+      position: absolute;
+      top:0;
+      left:0;
+      display: flex;
+      flex-direction: column;
+    }
+    .quiz-header {
+      background: #0288d1;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      position: relative;
+    }
+    .quiz-header h2 {
+      margin-bottom: 5px;
+    }
+    .quiz-header .backToMenuBtn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+    }
+    .quiz-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .quiz-question {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .quiz-question h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    .quiz-question .option {
+      margin: 6px 0;
+      cursor: pointer;
+    }
+    .quiz-submit-btn {
+      width: 120px;
+      padding: 10px;
+      margin: 10px auto;
+      display: block;
+      background: #00796b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .quiz-submit-btn:hover {
+      background: #004d40;
+    }
+    .quiz-result {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    /* ========== 响应式适配手机 ========== */
+    @media (max-width: 600px) {
+      #mainMenu h1 {
+        font-size: 1.6rem;
+      }
+      .menu-btn {
+        width: 160px;
+        font-size: 0.9rem;
+      }
+      .quiz-question {
+        padding: 10px;
+      }
+      .quiz-question h3 {
+        font-size: 0.95rem;
+      }
+      .quiz-submit-btn {
+        width: 100px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* ========== 动画内容（6大场景 + 场景4游戏） ========== */
+    #animationContainer {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      perspective: 1000px; 
+    }
+
+    /* 场景基础 */
+    .scene {
+      position: absolute;
+      top:0; 
+      left:0;
+      width: 100%;
+      height: 100%;
+      display: none;
       overflow: hidden;
     }
     .active {
-      display: block; /* 需要展示时添加active类 */
+      display: block;
     }
-    /* 场景淡入淡出动画 */
+
     .fade-in {
       animation: fadeIn 1.5s forwards ease;
     }
@@ -46,15 +212,15 @@
       animation: fadeOut 1.5s forwards ease;
     }
     @keyframes fadeIn {
-      0%   { opacity: 0; }
+      0% { opacity: 0; }
       100% { opacity: 1; }
     }
     @keyframes fadeOut {
-      0%   { opacity: 1; }
+      0% { opacity: 1; }
       100% { opacity: 0; }
     }
 
-    /* ===================== 云朵漂动动画（通用） ===================== */
+    /* 云朵漂移 */
     .cloud {
       position: absolute;
       width: 200px;
@@ -70,7 +236,7 @@
       100% { transform: translateX(1300px); }
     }
 
-    /* ===================== 水面与波浪（通用） ===================== */
+    /* 水面与波浪 */
     .water {
       position: absolute;
       bottom: 0;
@@ -99,19 +265,19 @@
       100% { transform: translateX(-1000px); }
     }
 
-    /* ===================== 小船（通用） ===================== */
+    /* 小船 */
     .boat {
       position: absolute;
       width: 120px;
       height: 60px;
       left: 10%;
       bottom: 20%;
-      background-color: #8d6e63; /* 船体 */
+      background-color: #8d6e63; 
       border-radius: 0 0 80px 80px;
       animation: boatFloat 3s ease-in-out infinite;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
     }
     .boat::before {
-      /* 船帆 */
       content: "";
       position: absolute;
       width: 60px;
@@ -127,7 +293,7 @@
       50% { transform: translateY(-5px) rotate(1deg); }
     }
 
-    /* ===================== 文字卡片公用样式 ===================== */
+    /* 公共卡片/文字排版 */
     .card {
       background-color: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(4px);
@@ -137,7 +303,7 @@
       position: relative;
     }
 
-    /* ===================== 场景1：开场介绍 ===================== */
+    /* ========== 场景1 样式 ========== */
     #scene1 .title {
       position: absolute;
       top: 15%;
@@ -151,7 +317,7 @@
       50% { transform: translateY(-5px); }
     }
 
-    /* ===================== 场景2：水闸的基本概念 ===================== */
+    /* ========== 场景2 3D翻转卡片等 ========== */
     #scene2 .diagram-container {
       position: absolute;
       top: 15%;
@@ -197,7 +363,7 @@
       justify-content: center;
     }
 
-    /* ===================== 场景3：水闸的类型 ===================== */
+    /* ========== 场景3 水闸类型卡片 ========== */
     #scene3 .gate-types {
       position: absolute;
       top: 10%;
@@ -227,18 +393,8 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
     }
-    .gate-item h4 {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      color: #333;
-    }
-    .gate-item p {
-      font-size: 0.9rem;
-      line-height: 1.5;
-      color: #444;
-    }
 
-    /* ===================== 场景4：交互式水闸游戏（重点） ===================== */
+    /* ========== 场景4：水闸小游戏 ========== */
     #scene4 .lock-system {
       position: absolute;
       top: 10%;
@@ -253,7 +409,7 @@
       display: flex;
       flex-direction: row;
     }
-    /* 左侧的游戏操作面板 */
+    /* 左侧操作面板 */
     .sidebar-game {
       width: 250px;
       min-width: 200px;
@@ -301,7 +457,7 @@
     #resetGame:hover {
       background: #d32f2f;
     }
-    /* 右侧的动画可视区域 */
+    /* 右侧可视区域 */
     .lock-visual {
       flex: 1;
       position: relative;
@@ -310,7 +466,6 @@
       margin: 0 auto;
       overflow: hidden;
     }
-    /* 闸室主体 */
     .chamber {
       position: absolute;
       width: 80%;
@@ -328,11 +483,10 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 80%; /* 初始：上游水位 */
+      height: 80%; /* 初始：上游水位80% */
       background: linear-gradient(to top, #4fc3f7 0%, #b3e5fc 100%);
       transition: height 1.5s ease;
     }
-    /* 闸门 */
     .gate {
       position: absolute;
       bottom: 0;
@@ -347,7 +501,6 @@
     .open-left { transform: translateX(-100%); }
     .open-right { transform: translateX(100%); }
 
-    /* 船只(游戏内) */
     .lock-boat {
       position: absolute;
       bottom: 10%;
@@ -355,7 +508,7 @@
       height: 40px;
       background-color: #8d6e63;
       border-radius: 40px 40px 0 0;
-      left: -15%; /* 初始在左外 */
+      left: -15%; /* 船在左外 */
       transition: left 1.5s ease, bottom 1.5s ease;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
@@ -383,7 +536,6 @@
       transform: translateX(-50%);
     }
 
-    /* 状态栏 */
     .status-bar {
       margin-top: 10px;
       padding: 6px;
@@ -395,7 +547,7 @@
       margin-right: 10px;
     }
 
-    /* ===================== 场景5：运河意义 ===================== */
+    /* ========== 场景5：运河意义 ========== */
     #scene5 .scenery {
       position: absolute;
       width: 100%;
@@ -458,7 +610,7 @@
       100% { transform: scale(1.02); }
     }
 
-    /* ===================== 场景6：互动与结尾 ===================== */
+    /* ========== 场景6 结尾 ========== */
     #scene6 .final-view {
       position: absolute;
       top: 0; left: 0;
@@ -499,537 +651,655 @@
       0% { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
     }
+
   </style>
 </head>
+
 <body>
-  <div id="app">
-    <!-- ===================== 场景1：开场介绍 ===================== -->
-    <div id="scene1" class="scene">
-      <!-- 云朵 -->
-      <div class="cloud" style="top:10%; left:15%;"></div>
-      <div class="cloud" style="top:20%; left:40%; animation-delay: -15s;"></div>
-      <div class="cloud" style="top:5%; left:70%; animation-delay: -5s;"></div>
-      <!-- 水面 -->
-      <div class="water">
-        <div class="wave"></div>
-        <div class="wave"></div>
-      </div>
-      <!-- 小船 -->
-      <div class="boat"></div>
-      <!-- 文字标题介绍 -->
-      <div class="title card fade-in">
-        <h2>欢迎来到“探秘京杭大运河”解说短片</h2>
-        <p>
-          今天我们将一起了解一个非常重要的水利设施——水闸。
-          它就像一扇‘水门’，帮助船只在不同水位之间顺利通过，
-          还能调节水流，保护沿河地区的安全。
-        </p>
-      </div>
-    </div>
+<div id="app">
+  <!-- ========== 主菜单 ========== -->
+  <div id="mainMenu">
+    <h1>京杭大运河 - 动画 & 问答游戏</h1>
+    <button class="menu-btn" id="btnGoAnimation">进入动画</button>
+    <button class="menu-btn" id="btnGoQuiz">问答游戏</button>
+  </div>
 
-    <!-- ===================== 场景2：水闸的基本概念 ===================== -->
-    <div id="scene2" class="scene">
-      <!-- 云朵 -->
-      <div class="cloud" style="top:15%; left:20%;"></div>
-      <div class="cloud" style="top:25%; left:50%; animation-delay:-10s;"></div>
-      <!-- 水面 -->
-      <div class="water">
-        <div class="wave"></div>
-        <div class="wave"></div>
-      </div>
-      <!-- 小船（示意） -->
-      <div class="boat" style="animation: boatFloat 2s infinite; bottom:25%;"></div>
+  <!-- ========== 动画页面 ========== -->
+  <div id="animationPage" class="hidden">
+    <button class="backToMenuBtn" id="btnBackMenuFromAnimation">返回主菜单</button>
 
-      <div class="diagram-container fade-in">
-        <div class="diagram-card">
-          <!-- 正面 -->
-          <div class="diagram-face diagram-front">
-            <h4>水闸结构示意(正面)</h4>
-            <p>闸室、闸门、水位线等关键部件</p>
+    <div id="animationContainer">
+      <!-- 场景1 -->
+      <div id="scene1" class="scene">
+        <!-- 云朵 -->
+        <div class="cloud" style="top:10%; left:15%;"></div>
+        <div class="cloud" style="top:20%; left:40%; animation-delay:-15s;"></div>
+        <!-- 水面 -->
+        <div class="water">
+          <div class="wave"></div>
+          <div class="wave"></div>
+        </div>
+        <!-- 小船 -->
+        <div class="boat"></div>
+
+        <!-- 文字卡片 -->
+        <div class="title card fade-in">
+          <h2>欢迎来到“探秘京杭大运河”解说短片</h2>
+          <p>
+            今天我们将一起了解在京杭大运河中一个非常重要的水利设施——水闸。
+            它就像一扇‘水门’，帮助船只在不同水位之间顺利通过，还能调节水流，
+            保护沿河地区的安全。
+          </p>
+        </div>
+      </div>
+
+      <!-- 场景2：水闸的基本概念 -->
+      <div id="scene2" class="scene">
+        <!-- 云朵 -->
+        <div class="cloud" style="top:15%; left:20%;"></div>
+        <div class="cloud" style="top:25%; left:50%; animation-delay:-10s;"></div>
+        <!-- 水面 -->
+        <div class="water">
+          <div class="wave"></div>
+          <div class="wave"></div>
+        </div>
+        <!-- 小船(示意) -->
+        <div class="boat" style="animation: boatFloat 2s infinite; bottom:25%;"></div>
+
+        <div class="diagram-container fade-in">
+          <div class="diagram-card">
+            <!-- 正面 -->
+            <div class="diagram-face diagram-front">
+              <h4>水闸结构示意(正面)</h4>
+              <p>闸室、闸门、水位线等关键部件</p>
+            </div>
+            <!-- 背面 -->
+            <div class="diagram-face diagram-back">
+              <h4>水闸功能(背面)</h4>
+              <p style="margin: 0 20px; text-align:center;">
+                用于控制水位和水流，分洪防汛，  
+                以及帮助船只克服上下游水位差
+              </p>
+            </div>
           </div>
-          <!-- 背面 -->
-          <div class="diagram-face diagram-back">
-            <h4>水闸功能(背面)</h4>
-            <p style="margin: 0 20px; text-align:center;">
-              用于控制水位水流、分洪防汛、  
-              以及帮助船只克服上下游水位差
+        </div>
+
+        <div style="
+          position:absolute;
+          bottom:10%;
+          left:10%;
+          right:10%;
+          background-color: rgba(255,255,255,0.8);
+          color: #333;
+          padding: 10px;
+          border-radius: 10px;
+        ">
+          <h3>什么是水闸？</h3>
+          <p>
+            水闸是一种用来控制水位和水流的水工建筑。它通常由闸门、闸室和控制系统组成。
+            其功能包括帮助船只克服上下游水位差，调节水流量，以及在汛期分洪或防止洪水。
+          </p>
+        </div>
+      </div>
+
+      <!-- 场景3：水闸的类型 -->
+      <div id="scene3" class="scene">
+        <!-- 云朵 -->
+        <div class="cloud" style="top:5%; left:30%;"></div>
+        <div class="cloud" style="top:25%; left:60%; animation-delay:-10s;"></div>
+        <!-- 水面 -->
+        <div class="water">
+          <div class="wave"></div>
+          <div class="wave"></div>
+        </div>
+        <!-- 小船在底部 -->
+        <div class="boat" style="left:5%; bottom:15%;"></div>
+
+        <div class="gate-types fade-in">
+          <div class="gate-item">
+            <h4>船闸</h4>
+            <p>
+              用于帮助船只在高低水位之间安全通行。
+              通过闸门和闸室水位的逐步变化，让船平稳通过。
+            </p>
+          </div>
+          <div class="gate-item">
+            <h4>节制闸</h4>
+            <p>
+              主要作用是调节水量，类似“水龙头”，
+              在旱季储水，汛期时防止洪水泛滥。
+            </p>
+          </div>
+          <div class="gate-item">
+            <h4>分洪闸</h4>
+            <p>
+              当雨水过多导致水位暴涨时，分洪闸将多余的水引入分洪道，
+              有效减轻下游洪水威胁。
             </p>
           </div>
         </div>
       </div>
-      <div style="
-        position:absolute; 
-        bottom:10%; 
-        left:10%; 
-        right:10%;
-        background-color: rgba(255,255,255,0.8);
-        color: #333;
-        padding: 10px;
-        border-radius: 10px;
-      ">
-        <h3>什么是水闸？</h3>
-        <p>
-          水闸是一种用来控制水位和水流的水工建筑。它通常由闸门、闸室和控制系统组成。
-          它能帮助船只克服上下游的水位差，调节水流量，以及在汛期分洪或防止洪水。
-        </p>
-      </div>
-    </div>
 
-    <!-- ===================== 场景3：水闸的类型 ===================== -->
-    <div id="scene3" class="scene">
-      <!-- 云朵 -->
-      <div class="cloud" style="top:5%; left:30%;"></div>
-      <div class="cloud" style="top:25%; left:60%; animation-delay:-10s;"></div>
-      <!-- 水面 -->
-      <div class="water">
-        <div class="wave"></div>
-        <div class="wave"></div>
-      </div>
-      <!-- 小船在底部 -->
-      <div class="boat" style="left:5%; bottom:15%;"></div>
-
-      <div class="gate-types fade-in">
-        <div class="gate-item">
-          <h4>船闸</h4>
-          <p>
-            用于帮助船只在高低水位之间安全通行。
-            通过闸门和闸室水位的逐步变化，让船平稳通过。
-          </p>
-        </div>
-        <div class="gate-item">
-          <h4>节制闸</h4>
-          <p>
-            主要作用是调节水量，类似于“水龙头”，
-            在旱季储水，汛期防止洪水泛滥。
-          </p>
-        </div>
-        <div class="gate-item">
-          <h4>分洪闸</h4>
-          <p>
-            当雨水过多导致水位暴涨时，分洪闸会将多余的水引入分洪道，
-            有效减轻下游洪水威胁。
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- ===================== 场景4：水闸运作方式 + 交互式游戏 ===================== -->
-    <div id="scene4" class="scene">
-      <!-- 云朵 -->
-      <div class="cloud" style="top:10%; left:10%;"></div>
-      <div class="cloud" style="top:30%; left:50%; animation-delay: -10s;"></div>
-      <!-- 水面 -->
-      <div class="water">
-        <div class="wave"></div>
-        <div class="wave"></div>
-      </div>
-
-      <div class="lock-system fade-in">
-        <!-- 游戏操作面板 -->
-        <div class="sidebar-game">
-          <h3>水闸操作小游戏</h3>
-          <p>请按正确顺序操作阀门与闸门，让船只顺利从左到右。</p>
-          <p>若操作错误，会提示失败，需要重新开始。</p>
-          
-          <div class="btn-group">
-            <button id="openTopValve">开启上阀</button>
-            <button id="closeTopValve">关闭上阀</button>
-          </div>
-          <div class="btn-group">
-            <button id="openLeftGate">打开上闸门</button>
-            <button id="closeLeftGate">关闭上闸门</button>
-          </div>
-          <div class="btn-group">
-            <button id="openBottomValve">开启下阀</button>
-            <button id="closeBottomValve">关闭下阀</button>
-          </div>
-          <div class="btn-group">
-            <button id="openRightGate">打开下闸门</button>
-            <button id="closeRightGate">关闭下闸门</button>
-          </div>
-          <hr>
-          <p>当船抵达右侧即可进入下个场景！</p>
-          <button id="resetGame">重新开始</button>
-          <div class="status-bar">
-            <span>时间：<span id="timerText">0</span> s</span>
-            <span>操作：<span id="stepsText">0</span></span>
-            <span id="gameStatus">准备中</span>
-          </div>
+      <!-- 场景4：水闸运作方式 + 交互式小游戏 -->
+      <div id="scene4" class="scene">
+        <!-- 云 -->
+        <div class="cloud" style="top:10%; left:10%;"></div>
+        <div class="cloud" style="top:30%; left:50%; animation-delay:-10s;"></div>
+        <!-- 水面 -->
+        <div class="water">
+          <div class="wave"></div>
+          <div class="wave"></div>
         </div>
 
-        <!-- 游戏可视区域 -->
-        <div class="lock-visual">
-          <div class="chamber" id="chamber">
-            <div class="chamber-water" id="chamberWater"></div>
-            <div class="gate gate-left" id="gateLeft"></div>
-            <div class="gate gate-right" id="gateRight"></div>
-            <div class="lock-boat" id="lockBoat"></div>
-            <div class="valve valve-top" id="valveTop" title="上排水阀"></div>
-            <div class="valve valve-bottom" id="valveBottom" title="下排水阀"></div>
+        <div class="lock-system fade-in">
+          <!-- 游戏操作面板 -->
+          <div class="sidebar-game">
+            <h3>水闸操作小游戏</h3>
+            <p>请按正确顺序操作阀门与闸门，让船只从左到右顺利通过。</p>
+            <p>若操作错误，会提示失败，需要重新开始。</p>
+            
+            <div class="btn-group">
+              <button id="openTopValve">开启上阀</button>
+              <button id="closeTopValve">关闭上阀</button>
+            </div>
+            <div class="btn-group">
+              <button id="openLeftGate">打开上闸门</button>
+              <button id="closeLeftGate">关闭上闸门</button>
+            </div>
+            <div class="btn-group">
+              <button id="openBottomValve">开启下阀</button>
+              <button id="closeBottomValve">关闭下阀</button>
+            </div>
+            <div class="btn-group">
+              <button id="openRightGate">打开下闸门</button>
+              <button id="closeRightGate">关闭下闸门</button>
+            </div>
+            <hr>
+            <p>当船到达右侧，即成功完成该场景！</p>
+            <button id="resetGame">重新开始</button>
+            <div class="status-bar">
+              <span>时间：<span id="timerText">0</span>s</span>
+              <span>操作：<span id="stepsText">0</span></span>
+              <span id="gameStatus">等待操作</span>
+            </div>
+          </div>
+
+          <!-- 游戏可视区域 -->
+          <div class="lock-visual">
+            <div class="chamber" id="chamber">
+              <div class="chamber-water" id="chamberWater"></div>
+              <div class="gate gate-left" id="gateLeft"></div>
+              <div class="gate gate-right" id="gateRight"></div>
+              <div class="lock-boat" id="lockBoat"></div>
+              <div class="valve valve-top" id="valveTop" title="上排水阀"></div>
+              <div class="valve valve-bottom" id="valveBottom" title="下排水阀"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- ===================== 场景5：京杭大运河的意义 ===================== -->
-    <div id="scene5" class="scene">
-      <div class="scenery">
-        <div class="text-box fade-in">
-          <h3>京杭大运河的意义</h3>
-          <p>
-            京杭大运河是世界上最长的人工河，始建于两千多年前。它是古代南北交通的重要枢纽，
-            也是现代水利工程的典范。水闸的运用，让大运河的水路更加安全、便利，
-            并且为沿岸城市的发展提供了强大助力。
-          </p>
+      <!-- 场景5：京杭大运河的意义 -->
+      <div id="scene5" class="scene">
+        <div class="scenery">
+          <div class="text-box fade-in">
+            <h3>京杭大运河的意义</h3>
+            <p>
+              京杭大运河是世界上最长的人工河，始建于两千多年前。
+              不仅是古代中国南北交通的重要枢纽，也是现代水利工程的典范。
+              水闸的运用让大运河水路更加安全便利，并为沿岸城市的发展提供了强大助力。
+            </p>
+          </div>
+          <div class="town-boat"></div>
+          <div class="town-building"></div>
         </div>
-        <!-- 船与建筑飘过 -->
-        <div class="town-boat"></div>
-        <div class="town-building"></div>
       </div>
-    </div>
 
-    <!-- ===================== 场景6：结尾 ===================== -->
-    <div id="scene6" class="scene">
-      <div class="final-view fade-in">
-        <div class="final-pan"></div>
-        <div class="final-text">
-          <p>
-            “通过了解京杭大运河内水闸的类型和原理，
-            我们看到了古代智慧和现代科技的结合。
-            希望大家在参观大运河时，能更加了解这条伟大的水路，
-            一起守护大运河的未来！”
-          </p>
-          <p style="margin-top:20px; text-align:right; font-weight:bold;">—— 感谢观看！</p>
+      <!-- 场景6：结尾 -->
+      <div id="scene6" class="scene">
+        <div class="final-view fade-in">
+          <div class="final-pan"></div>
+          <div class="final-text">
+            <p>
+              “通过了解京杭大运河内水闸的类型和原理，
+              我们看到了古代智慧与现代科技的结合。
+              希望大家在下一次参观大运河时，能更加了解这条伟大的水路，
+              一起守护大运河的未来！”
+            </p>
+            <p style="margin-top:20px; text-align:right; font-weight:bold;">—— 感谢观看！</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-    /* ===================== 全局场景切换逻辑 ===================== */
-    const scenes = [
-      document.getElementById('scene1'),
-      document.getElementById('scene2'),
-      document.getElementById('scene3'),
-      document.getElementById('scene4'),
-      document.getElementById('scene5'),
-      document.getElementById('scene6'),
-    ];
-    let currentScene = 0; // 从场景0开始
+  <!-- ========== 问答游戏页面 ========== -->
+  <div id="quizPage" class="hidden">
+    <div class="quiz-header">
+      <button class="backToMenuBtn" id="btnBackMenuFromQuiz">返回</button>
+      <h2>大运河水闸知识 - 问答游戏</h2>
+      <p>测试一下你对水闸和大运河的了解程度吧！</p>
+    </div>
+    <div class="quiz-container" id="quizContainer">
+      <!-- 示例题1 -->
+      <div class="quiz-question" data-answer="1">
+        <h3>1. 大运河主要功能不包括以下哪项？</h3>
+        <label class="option"><input type="radio" name="q1" value="1"> 用于火箭、飞行器发射</label><br/>
+        <label class="option"><input type="radio" name="q1" value="2"> 运输货物与人员</label><br/>
+        <label class="option"><input type="radio" name="q1" value="3"> 分洪防汛</label><br/>
+        <label class="option"><input type="radio" name="q1" value="4"> 调节水位</label>
+      </div>
+      <!-- 示例题2 -->
+      <div class="quiz-question" data-answer="2">
+        <h3>2. 哪种水闸主要用于帮助船舶通过？</h3>
+        <label class="option"><input type="radio" name="q2" value="1"> 节制闸</label><br/>
+        <label class="option"><input type="radio" name="q2" value="2"> 船闸</label><br/>
+        <label class="option"><input type="radio" name="q2" value="3"> 分洪闸</label><br/>
+        <label class="option"><input type="radio" name="q2" value="4"> 潮汐闸</label>
+      </div>
+      <!-- 示例题3 -->
+      <div class="quiz-question" data-answer="3">
+        <h3>3. 当需要让闸室水位与下游持平时，应先开启？</h3>
+        <label class="option"><input type="radio" name="q3" value="1"> 下闸门</label><br/>
+        <label class="option"><input type="radio" name="q3" value="2"> 上排水阀</label><br/>
+        <label class="option"><input type="radio" name="q3" value="3"> 下排水阀</label><br/>
+        <label class="option"><input type="radio" name="q3" value="4"> 不需要开启阀门</label>
+      </div>
+      
+      <button class="quiz-submit-btn" id="quizSubmitBtn">提交答案</button>
+      <div class="quiz-result" id="quizResult"></div>
+    </div>
+  </div>
+</div>
 
-    function showScene(index) {
-      scenes.forEach((scene, i) => {
-        scene.classList.remove('active');
+<script>
+  /* ========== 全局 DOM 获取 ========== */
+  const mainMenu = document.getElementById('mainMenu');
+  const animationPage = document.getElementById('animationPage');
+  const quizPage = document.getElementById('quizPage');
+
+  const btnGoAnimation = document.getElementById('btnGoAnimation');
+  const btnGoQuiz = document.getElementById('btnGoQuiz');
+  const btnBackMenuFromAnimation = document.getElementById('btnBackMenuFromAnimation');
+  const btnBackMenuFromQuiz = document.getElementById('btnBackMenuFromQuiz');
+
+  // 问答
+  const quizSubmitBtn = document.getElementById('quizSubmitBtn');
+  const quizResult = document.getElementById('quizResult');
+
+  // 动画容器
+  const animationContainer = document.getElementById('animationContainer');
+
+  // 6 场景
+  const scenes = [
+    document.getElementById('scene1'),
+    document.getElementById('scene2'),
+    document.getElementById('scene3'),
+    document.getElementById('scene4'),
+    document.getElementById('scene5'),
+    document.getElementById('scene6'),
+  ];
+  let currentSceneIndex = 0;
+
+  // ========== 显示/隐藏不同页面 ========== 
+  function showMainMenu() {
+    mainMenu.classList.remove('hidden');
+    animationPage.classList.add('hidden');
+    quizPage.classList.add('hidden');
+  }
+  function showAnimationPage() {
+    mainMenu.classList.add('hidden');
+    animationPage.classList.remove('hidden');
+    quizPage.classList.add('hidden');
+    // 每次进入动画时，可重新初始化场景
+    startScenePlay();
+  }
+  function showQuizPage() {
+    mainMenu.classList.add('hidden');
+    animationPage.classList.add('hidden');
+    quizPage.classList.remove('hidden');
+    // 重置问答结果
+    quizResult.textContent = "";
+  }
+
+  btnGoAnimation.addEventListener('click', showAnimationPage);
+  btnGoQuiz.addEventListener('click', showQuizPage);
+  btnBackMenuFromAnimation.addEventListener('click', showMainMenu);
+  btnBackMenuFromQuiz.addEventListener('click', showMainMenu);
+
+  // ========== 问答游戏 ========== 
+  quizSubmitBtn.addEventListener('click', () => {
+    const questions = document.querySelectorAll('.quiz-question');
+    let correctCount = 0;
+    let totalCount = questions.length;
+
+    questions.forEach(q => {
+      const correctAnswer = q.getAttribute('data-answer');
+      const inputs = q.querySelectorAll('input[type="radio"]');
+      let userAnswer = null;
+      inputs.forEach(ip => {
+        if(ip.checked) {
+          userAnswer = ip.value;
+        }
       });
-      scenes[index].classList.add('active');
-    }
+      if(userAnswer === correctAnswer) {
+        correctCount++;
+      }
+    });
 
-    function fadeTransition(fromIndex, toIndex) {
-      scenes[fromIndex].classList.add('fade-out');
+    quizResult.textContent = `本次答对 ${correctCount} / ${totalCount} 题`;
+  });
+
+  // ========== 动画场景自动切换逻辑 ========== 
+  function showScene(idx) {
+    scenes.forEach((sc, i) => {
+      sc.classList.remove('active');
+    });
+    scenes[idx].classList.add('active');
+  }
+
+  function fadeTransition(fromIndex, toIndex) {
+    scenes[fromIndex].classList.add('fade-out');
+    setTimeout(() => {
+      scenes[fromIndex].classList.remove('active', 'fade-out');
+      showScene(toIndex);
+      scenes[toIndex].classList.add('fade-in');
       setTimeout(() => {
-        scenes[fromIndex].classList.remove('active', 'fade-out');
-        showScene(toIndex);
-        scenes[toIndex].classList.add('fade-in');
-        setTimeout(() => {
-          scenes[toIndex].classList.remove('fade-in');
-        }, 1500);
+        scenes[toIndex].classList.remove('fade-in');
       }, 1500);
-    }
+    }, 1500);
+  }
 
-    // 初始显示场景1
+  // 为场景4水闸游戏：完成后手动切到场景5
+  function goToScene5() {
+    fadeTransition(3, 4);
+    currentSceneIndex = 4;
+    // 然后场景5停留30秒 -> 场景6
+    setTimeout(() => {
+      fadeTransition(4, 5);
+      currentSceneIndex = 5;
+      // 场景6可一直停留
+    }, 30000);
+  }
+
+  // ========== 启动场景播放：场景1 ~ 3自动切，场景4玩游戏 -> 成功后切场景5->6 ========== 
+  let sceneTimers = []; // 存储各场景的 setTimeout ID，进入动画时重置
+
+  function startScenePlay() {
+    // 先清理
+    sceneTimers.forEach(tid => clearTimeout(tid));
+    sceneTimers = [];
+    // 重置
+    currentSceneIndex = 0;
     showScene(0);
 
-    /* 
-      场景播放顺序：
-      场景1 -> 30秒 -> 场景2 -> 30秒 -> 场景3 -> 30秒 -> 场景4(交互) -> 用户完成游戏后 -> 场景5 -> 30秒 -> 场景6 -> 结束
-      这里前3个场景和后2个场景自动切换；场景4只有在游戏成功后才切换。
-    */
-    setTimeout(() => {
+    // 场景1 -> 30秒 -> 场景2
+    sceneTimers.push(setTimeout(() => {
       fadeTransition(0,1);
-      currentScene = 1;
-    }, 30000); // 30秒后切到 scene2
+      currentSceneIndex = 1;
+    }, 30000));
 
-    setTimeout(() => {
+    // 场景2 -> 30秒 -> 场景3
+    sceneTimers.push(setTimeout(() => {
       fadeTransition(1,2);
-      currentScene = 2;
-    }, 60000); // 60秒后切到 scene3
+      currentSceneIndex = 2;
+    }, 60000));
 
-    /* 场景3 -> 4 在 90秒后自动进行 */
-    setTimeout(() => {
+    // 场景3 -> 30秒 -> 场景4(游戏)
+    sceneTimers.push(setTimeout(() => {
       fadeTransition(2,3);
-      currentScene = 3;
-      // 进入scene4后，启用游戏
-      initGame();
-    }, 90000);
+      currentSceneIndex = 3;
+      initGame(); // 启动水闸小游戏
+    }, 90000));
+  }
 
-    // 当游戏完成后，会调用 goToScene5() 手动切换到场景5
-    function goToScene5() {
-      fadeTransition(3,4);
-      currentScene = 4;
-      // 场景5->6自动切
+  // ========== 场景4：水闸游戏逻辑 ========== 
+  let timeElapsed = 0;
+  let timerInterval = null;
+  let stepCount = 0;
+  let isGameOver = false;
+
+  let waterLowered = false;  
+  let boatInChamber = false; 
+  let waterRaised = false;  
+  let boatOut = false;
+
+  const valveTop = document.getElementById('valveTop');
+  const valveBottom = document.getElementById('valveBottom');
+  const gateLeft = document.getElementById('gateLeft');
+  const gateRight = document.getElementById('gateRight');
+  const chamberWater = document.getElementById('chamberWater');
+  const lockBoat = document.getElementById('lockBoat');
+
+  const openTopValveBtn = document.getElementById('openTopValve');
+  const closeTopValveBtn = document.getElementById('closeTopValve');
+  const openBottomValveBtn = document.getElementById('openBottomValve');
+  const closeBottomValveBtn = document.getElementById('closeBottomValve');
+  const openLeftGateBtn = document.getElementById('openLeftGate');
+  const closeLeftGateBtn = document.getElementById('closeLeftGate');
+  const openRightGateBtn = document.getElementById('openRightGate');
+  const closeRightGateBtn = document.getElementById('closeRightGate');
+  const resetGameBtn = document.getElementById('resetGame');
+
+  const timerText = document.getElementById('timerText');
+  const stepsText = document.getElementById('stepsText');
+  const gameStatus = document.getElementById('gameStatus');
+
+  function disableAllGameBtns(ms=1500) {
+    [
+      openTopValveBtn, closeTopValveBtn,
+      openBottomValveBtn, closeBottomValveBtn,
+      openLeftGateBtn, closeLeftGateBtn,
+      openRightGateBtn, closeRightGateBtn
+    ].forEach(btn => {
+      btn.disabled = true;
+      setTimeout(() => { btn.disabled = false; }, ms);
+    });
+  }
+
+  function initGame() {
+    timeElapsed = 0;
+    stepCount = 0;
+    isGameOver = false;
+    waterLowered = false;
+    boatInChamber = false;
+    waterRaised = false;
+    boatOut = false;
+
+    valveTop.classList.remove('open');
+    valveBottom.classList.remove('open');
+    gateLeft.classList.remove('open-left');
+    gateRight.classList.remove('open-right');
+
+    chamberWater.style.height = '80%'; 
+    lockBoat.style.left = '-15%'; 
+    lockBoat.style.bottom = '10%';
+
+    timerText.textContent = '0';
+    stepsText.textContent = '0';
+    gameStatus.textContent = '等待操作';
+
+    if(timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if(!isGameOver) {
+        timeElapsed++;
+        timerText.textContent = timeElapsed.toString();
+      }
+    }, 1000);
+  }
+
+  function addStep() {
+    if(!isGameOver) {
+      stepCount++;
+      stepsText.textContent = stepCount.toString();
+    }
+  }
+
+  function failAction(msg) {
+    if(!isGameOver) {
+      isGameOver = true;
+      gameStatus.textContent = '操作错误：' + msg;
+      clearInterval(timerInterval);
+      alert('操作错误！' + msg + '\n请点击“重新开始”重试。');
+    }
+  }
+
+  function checkWin() {
+    if(boatOut && !isGameOver) {
+      isGameOver = true;
+      gameStatus.textContent = `通关！耗时${timeElapsed}s，操作${stepCount}次`;
+      clearInterval(timerInterval);
+      alert(`恭喜你完成水闸操作！\n耗时：${timeElapsed}秒\n操作：${stepCount}次\n即将进入下一个场景...`);
+      // 稍等1.5秒后切场景5
+      setTimeout(goToScene5, 1500);
+    }
+  }
+
+  // 具体操作
+  openTopValveBtn.addEventListener('click', () => {
+    if(isGameOver) return;
+    addStep();
+    disableAllGameBtns();
+    if(boatInChamber) {
+      failAction('船在闸室里，不能再开上阀排水。');
+      return;
+    }
+    valveTop.classList.add('open');
+    gameStatus.textContent = '上阀已开启，水位下降中...';
+    chamberWater.style.height = '40%';
+  });
+  closeTopValveBtn.addEventListener('click', () => {
+    if(isGameOver) return;
+    addStep();
+    disableAllGameBtns();
+
+    if(!valveTop.classList.contains('open')) {
+      failAction('上阀未开启，无法关闭！');
+      return;
+    }
+    const hVal = parseInt(chamberWater.style.height);
+    if(hVal > 45) {
+      failAction('水位尚未降到约40%，就关闭上阀？');
+      return;
+    }
+    valveTop.classList.remove('open');
+    waterLowered = true;
+    gameStatus.textContent = '上阀已关闭，水位保持低位(40%)。';
+  });
+  openLeftGateBtn.addEventListener('click', () => {
+    if(isGameOver) return;
+    addStep();
+    disableAllGameBtns();
+
+    if(!waterLowered) {
+      failAction('还没将水位降到下游水平，就想打开上闸门？');
+      return;
+    }
+    if(boatInChamber) {
+      failAction('船已在闸室，无需再开上闸门。');
+      return;
+    }
+    gateLeft.classList.add('open-left');
+    gameStatus.textContent = '上闸门已打开，船正在进入...';
+    setTimeout(() => {
+      lockBoat.style.left = '35%';
       setTimeout(() => {
-        fadeTransition(4,5);
-        currentScene = 5;
-        // 也可设置最后场景停留时间或永久展示
-        // 例如：在180s + 30s(场景5) + 30s(场景6) 后停止
-      }, 30000); // 场景5停留30秒后切到scene6
+        boatInChamber = true;
+      }, 1500);
+    }, 100);
+  });
+  closeLeftGateBtn.addEventListener('click', () => {
+    if(isGameOver) return;
+    addStep();
+    disableAllGameBtns();
+
+    if(!gateLeft.classList.contains('open-left')) {
+      failAction('上闸门未打开，无法关闭。');
+      return;
     }
-
-    /* ===================== 场景4：水闸游戏逻辑 ===================== */
-    let timeElapsed = 0;
-    let timerInterval = null;
-    let stepCount = 0;
-    let isGameOver = false;
-
-    let waterLowered = false;  
-    let boatInChamber = false; 
-    let waterRaised = false;  
-    let boatOut = false;     
-
-    const valveTop = document.getElementById('valveTop');
-    const valveBottom = document.getElementById('valveBottom');
-    const gateLeft = document.getElementById('gateLeft');
-    const gateRight = document.getElementById('gateRight');
-    const chamberWater = document.getElementById('chamberWater');
-    const lockBoat = document.getElementById('lockBoat');
-
-    const openTopValveBtn = document.getElementById('openTopValve');
-    const closeTopValveBtn = document.getElementById('closeTopValve');
-    const openBottomValveBtn = document.getElementById('openBottomValve');
-    const closeBottomValveBtn = document.getElementById('closeBottomValve');
-    const openLeftGateBtn = document.getElementById('openLeftGate');
-    const closeLeftGateBtn = document.getElementById('closeLeftGate');
-    const openRightGateBtn = document.getElementById('openRightGate');
-    const closeRightGateBtn = document.getElementById('closeRightGate');
-    const resetGameBtn = document.getElementById('resetGame');
-
-    const timerText = document.getElementById('timerText');
-    const stepsText = document.getElementById('stepsText');
-    const gameStatus = document.getElementById('gameStatus');
-
-    // 禁止玩家在某些操作后狂点
-    function disableAllButtons(ms=1500){
-      [
-        openTopValveBtn, closeTopValveBtn,
-        openBottomValveBtn, closeBottomValveBtn,
-        openLeftGateBtn, closeLeftGateBtn,
-        openRightGateBtn, closeRightGateBtn
-      ].forEach(btn => {
-        btn.disabled = true;
-        setTimeout(() => { btn.disabled = false; }, ms);
-      });
+    if(!boatInChamber) {
+      failAction('船尚未进入闸室就关闭闸门？');
+      return;
     }
+    gateLeft.classList.remove('open-left');
+    gameStatus.textContent = '上闸门已关闭。';
+  });
+  openBottomValveBtn.addEventListener('click', () => {
+    if(isGameOver) return;
+    addStep();
+    disableAllGameBtns();
 
-    function initGame() {
-      // 若不是scene4，则不初始化
-      if (currentScene !== 3) return;
-
-      timeElapsed = 0;
-      stepCount = 0;
-      isGameOver = false;
-      waterLowered = false;
-      boatInChamber = false;
-      waterRaised = false;
-      boatOut = false;
-
-      valveTop.classList.remove('open');
-      valveBottom.classList.remove('open');
-      gateLeft.classList.remove('open-left');
-      gateRight.classList.remove('open-right');
-
-      chamberWater.style.height = '80%'; 
-      lockBoat.style.left = '-15%'; 
-      lockBoat.style.bottom = '10%';
-
-      timerText.textContent = '0';
-      stepsText.textContent = '0';
-      gameStatus.textContent = '等待操作';
-
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        if (!isGameOver) {
-          timeElapsed++;
-          timerText.textContent = timeElapsed.toString();
-        }
-      }, 1000);
+    if(!boatInChamber) {
+      failAction('船还没进闸室，就开启下阀？');
+      return;
     }
-
-    function addStep() {
-      if (!isGameOver) {
-        stepCount++;
-        stepsText.textContent = stepCount.toString();
-      }
+    if(valveBottom.classList.contains('open')) {
+      failAction('下阀已是开启状态。');
+      return;
     }
+    valveBottom.classList.add('open');
+    chamberWater.style.height = '80%';
+    gameStatus.textContent = '下阀已开启，水位升回上游高度...';
+  });
+  closeBottomValveBtn.addEventListener('click', () => {
+    if(isGameOver) return;
+    addStep();
+    disableAllGameBtns();
 
-    function failAction(msg) {
-      if (!isGameOver) {
-        isGameOver = true;
-        gameStatus.textContent = '操作错误：' + msg;
-        clearInterval(timerInterval);
-        alert('操作错误！' + msg + '\n请点击“重新开始”重试。');
-      }
+    if(!valveBottom.classList.contains('open')) {
+      failAction('下阀并未开启，无法关闭。');
+      return;
     }
-
-    function checkWin() {
-      if (boatOut && !isGameOver) {
-        isGameOver = true;
-        gameStatus.textContent = `通关！耗时${timeElapsed}s，操作${stepCount}次`;
-        clearInterval(timerInterval);
-        alert(`恭喜你完成水闸操作！\n耗时：${timeElapsed}秒\n操作：${stepCount}次\n即将进入下一个场景...`);
-        // 稍等1.5s后自动跳转场景5
-        setTimeout(goToScene5, 1500);
-      }
+    const hVal = parseInt(chamberWater.style.height);
+    if(hVal < 75) {
+      failAction('水位尚未升到80%，就关闭下阀？');
+      return;
     }
+    valveBottom.classList.remove('open');
+    waterRaised = true;
+    gameStatus.textContent = '下阀已关闭，上游水位保持(80%)。';
+  });
+  openRightGateBtn.addEventListener('click', () => {
+    if(isGameOver) return;
+    addStep();
+    disableAllGameBtns();
 
-    // ============== 按钮事件 ==============
-    openTopValveBtn.addEventListener('click', () => {
-      if (isGameOver) return;
-      addStep();
-      disableAllButtons();
-      // 若船已在闸室，就不能开上阀，否则水继续排，会出问题
-      if (boatInChamber) {
-        failAction('船已在闸室中，不能再开启上阀排水。');
-        return;
-      }
-      valveTop.classList.add('open');
-      gameStatus.textContent = '上阀开启，水位开始下降...';
-      chamberWater.style.height = '40%';
-    });
-    closeTopValveBtn.addEventListener('click', () => {
-      if (isGameOver) return;
-      addStep();
-      disableAllButtons();
-
-      if (!valveTop.classList.contains('open')) {
-        failAction('上阀尚未开启，无法关闭。');
-        return;
-      }
-      const hVal = parseInt(chamberWater.style.height);
-      if (hVal > 45) {
-        failAction('水位尚未降至合理低位(约40%)，就关闭上阀？');
-        return;
-      }
-      valveTop.classList.remove('open');
-      waterLowered = true;
-      gameStatus.textContent = '上阀关闭，水位稳定在低位(40%)。';
-    });
-
-    openLeftGateBtn.addEventListener('click', () => {
-      if (isGameOver) return;
-      addStep();
-      disableAllButtons();
-
-      if (!waterLowered) {
-        failAction('还没让水位降到下游水平，就开上闸门？');
-        return;
-      }
-      if (boatInChamber) {
-        failAction('船已经在闸室里，不要再打开上闸门。');
-        return;
-      }
-      gateLeft.classList.add('open-left');
-      gameStatus.textContent = '上闸门打开，船正在进入...';
-
+    if(!waterRaised) {
+      failAction('还没把水位升回高位，就打开下闸门？');
+      return;
+    }
+    gateRight.classList.add('open-right');
+    gameStatus.textContent = '下闸门已打开，船驶出...';
+    setTimeout(() => {
+      lockBoat.style.left = '110%';
       setTimeout(() => {
-        lockBoat.style.left = '35%';
-        setTimeout(() => {
-          boatInChamber = true;
-        }, 1500);
-      }, 100);
-    });
-    closeLeftGateBtn.addEventListener('click', () => {
-      if (isGameOver) return;
-      addStep();
-      disableAllButtons();
+        boatOut = true;
+        checkWin();
+      }, 1500);
+    }, 100);
+  });
+  closeRightGateBtn.addEventListener('click', () => {
+    if(isGameOver) return;
+    addStep();
+    disableAllGameBtns();
 
-      if (!gateLeft.classList.contains('open-left')) {
-        failAction('上闸门没有打开，无法关闭。');
-        return;
-      }
-      if (!boatInChamber) {
-        failAction('船尚未进闸室就想关门？');
-        return;
-      }
-      gateLeft.classList.remove('open-left');
-      gameStatus.textContent = '上闸门已关闭。';
-    });
+    if(!gateRight.classList.contains('open-right')) {
+      failAction('下闸门未打开，无法关闭。');
+      return;
+    }
+    if(!boatOut) {
+      failAction('船尚未离开，就要关闭下闸门？');
+      return;
+    }
+    gateRight.classList.remove('open-right');
+    gameStatus.textContent = '下闸门已关闭。';
+  });
 
-    openBottomValveBtn.addEventListener('click', () => {
-      if (isGameOver) return;
-      addStep();
-      disableAllButtons();
+  resetGameBtn.addEventListener('click', () => {
+    initGame();
+  });
 
-      if (!boatInChamber) {
-        failAction('船还没进入闸室，就想开下阀？');
-        return;
-      }
-      if (valveBottom.classList.contains('open')) {
-        failAction('下阀已经是开启状态。');
-        return;
-      }
-      valveBottom.classList.add('open');
-      chamberWater.style.height = '80%';
-      gameStatus.textContent = '下阀开启，水位升到上游高度...';
-    });
-    closeBottomValveBtn.addEventListener('click', () => {
-      if (isGameOver) return;
-      addStep();
-      disableAllButtons();
-
-      if (!valveBottom.classList.contains('open')) {
-        failAction('下阀并未开启，无法关闭。');
-        return;
-      }
-      const hVal = parseInt(chamberWater.style.height);
-      if (hVal < 75) {
-        failAction('水位尚未升到足够高度(80%)就关下阀？');
-        return;
-      }
-      valveBottom.classList.remove('open');
-      waterRaised = true;
-      gameStatus.textContent = '下阀关闭，水位保持在高位(80%)。';
-    });
-
-    openRightGateBtn.addEventListener('click', () => {
-      if (isGameOver) return;
-      addStep();
-      disableAllButtons();
-
-      if (!waterRaised) {
-        failAction('还没把水位升回高位，就开下闸门？');
-        return;
-      }
-      gateRight.classList.add('open-right');
-      gameStatus.textContent = '下闸门已打开，船正驶出...';
-
-      setTimeout(() => {
-        lockBoat.style.left = '110%';
-        setTimeout(() => {
-          boatOut = true;
-          checkWin();
-        }, 1500);
-      }, 100);
-    });
-    closeRightGateBtn.addEventListener('click', () => {
-      if (isGameOver) return;
-      addStep();
-      disableAllButtons();
-
-      if (!gateRight.classList.contains('open-right')) {
-        failAction('下闸门未打开，无法关闭。');
-        return;
-      }
-      if (!boatOut) {
-        failAction('船没离开，就要关下闸门？');
-        return;
-      }
-      gateRight.classList.remove('open-right');
-      gameStatus.textContent = '下闸门已关闭。';
-    });
-
-    resetGameBtn.addEventListener('click', () => {
-      initGame();
-    });
-  </script>
+  // ========== 默认显示主菜单 ========== 
+  showMainMenu();
+</script>
 </body>
 </html>

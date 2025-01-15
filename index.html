@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <title>京杭大运河 - 动画 & 问答游戏（完整加强版）</title>
+  <title>京杭大运河 - 动画 & 问答游戏（UI优化版）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    /* ========== 全局 & 重置 ========== */
+    /* ==================== 全局样式与重置 ==================== */
     * {
       margin: 0; 
       padding: 0; 
@@ -17,20 +17,26 @@
       overflow: hidden; /* 固定全屏 */
       font-family: "Microsoft YaHei", sans-serif;
       background: #b3d9ff;
+      /* 使用相对单位，让文字更易随屏幕变动 */
+      font-size: 16px;
     }
+
+    /* 让 rem 更好适配：一般默认html font-size=16px，即1rem=16px */
+    /* 后续在 @media 查询中可调整根字体大小 */
+
     /* 用于切换页面显示与隐藏 */
     .hidden {
       display: none !important;
     }
 
-    /* ========== 主容器 ========== */
+    /* ==================== 主容器 ==================== */
     #app {
       width: 100%;
       height: 100%;
       position: relative;
     }
 
-    /* ========== 主菜单 ========== */
+    /* ==================== 主菜单 ==================== */
     #mainMenu {
       width: 100%;
       height: 100%;
@@ -40,26 +46,28 @@
       align-items: center;
       justify-content: center;
       position: relative;
+      padding: 2rem;
     }
     #mainMenu h1 {
-      font-size: 2rem;
+      font-size: 1.5rem; /* 初始笔记本端 */
       color: #fff;
-      margin-bottom: 30px;
+      margin-bottom: 2rem;
       text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      text-align: center;
     }
     .menu-btn {
-      width: 200px;
-      padding: 15px;
-      margin: 10px;
+      width: 12rem;
+      padding: 0.75rem;
+      margin: 0.5rem;
       font-size: 1rem;
       color: #fff;
       background: #0288d1;
       border: none;
-      border-radius: 8px;
+      border-radius: 0.5rem;
       cursor: pointer;
       transition: background 0.3s;
       text-align: center;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 0.2rem 0.6rem rgba(0,0,0,0.2);
     }
     .menu-btn:hover {
       background: #0277bd;
@@ -67,22 +75,23 @@
     /* 神秘小游戏按钮，固定在右下角 */
     #mysteryGameBtn {
       position: absolute;
-      bottom: 15px;
-      right: 15px;
-      padding: 10px 15px;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.75rem 1rem;
       background: #e91e63;
       color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 0.5rem;
       cursor: pointer;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 0.2rem 0.6rem rgba(0,0,0,0.2);
       transition: background 0.3s;
+      font-size: 0.9rem;
     }
     #mysteryGameBtn:hover {
       background: #d81b60;
     }
 
-    /* ========== 动画页面容器 ========== */
+    /* ==================== 动画页面容器 ==================== */
     #animationPage {
       width: 100%;
       height: 100%;
@@ -94,23 +103,24 @@
     /* 返回主菜单按钮 */
     .backToMenuBtn {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      padding: 8px 12px;
+      top: 1rem;
+      left: 1rem;
+      padding: 0.5rem 0.8rem;
       background: #f44336;
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: 0.5rem;
       cursor: pointer;
       z-index: 999;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 0.2rem 0.6rem rgba(0,0,0,0.3);
       transition: background 0.3s;
+      font-size: 0.9rem;
     }
     .backToMenuBtn:hover {
       background: #d32f2f;
     }
 
-    /* ========== 问答游戏页面容器 ========== */
+    /* ==================== 问答游戏页面 ==================== */
     #quizPage {
       width: 100%;
       height: 100%;
@@ -124,47 +134,48 @@
     .quiz-header {
       background: #0288d1;
       color: #fff;
-      padding: 10px;
+      padding: 1rem;
       text-align: center;
       position: relative;
     }
     .quiz-header h2 {
-      margin-bottom: 5px;
+      margin-bottom: 0.5rem;
+      font-size: 1.2rem;
     }
     .quiz-header .backToMenuBtn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 0.7rem;
+      left: 0.7rem;
     }
     .quiz-container {
       flex: 1;
       overflow-y: auto;
-      padding: 20px;
+      padding: 1rem;
     }
     .quiz-question {
-      margin-bottom: 20px;
-      padding: 15px;
+      margin-bottom: 1rem;
+      padding: 1rem;
       background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      border-radius: 0.5rem;
+      box-shadow: 0 0.2rem 0.4rem rgba(0,0,0,0.1);
     }
     .quiz-question h3 {
       font-size: 1rem;
-      margin-bottom: 10px;
+      margin-bottom: 0.5rem;
     }
     .quiz-question .option {
-      margin: 6px 0;
+      margin: 0.3rem 0;
       cursor: pointer;
+      font-size: 0.9rem;
     }
     .quiz-submit-btn {
-      width: 120px;
-      padding: 10px;
-      margin: 10px auto;
+      width: 8rem;
+      padding: 0.5rem;
+      margin: 1rem auto;
       display: block;
       background: #00796b;
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: 0.5rem;
       font-size: 1rem;
       cursor: pointer;
       text-align: center;
@@ -175,44 +186,71 @@
     }
     .quiz-result {
       text-align: center;
-      margin-top: 10px;
-      font-size: 1.1rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
       color: #333;
     }
     /* 排行榜 */
     .leaderboard {
-      margin-top: 10px;
+      margin-top: 1rem;
       text-align: center;
       color: #555;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
     }
 
-    /* ========== 响应式适配手机 ========== */
-    @media (max-width: 600px) {
+    /* ==================== 响应式适配 ==================== */
+    /* 针对平板或中屏(<=900px)做轻量缩放 */
+    @media (max-width: 900px) {
+      html {
+        font-size: 15px; 
+      }
       #mainMenu h1 {
-        font-size: 1.6rem;
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
       }
       .menu-btn {
-        width: 160px;
-        font-size: 0.9rem;
-      }
-      #mysteryGameBtn {
-        font-size: 0.9rem;
-        padding: 8px 10px;
-      }
-      .quiz-question {
-        padding: 10px;
-      }
-      .quiz-question h3 {
+        width: 10rem;
         font-size: 0.95rem;
       }
-      .quiz-submit-btn {
-        width: 100px;
+    }
+    /* 针对手机或小屏(<=600px) */
+    @media (max-width: 600px) {
+      html {
+        font-size: 14px; /* 整体稍微再缩小一点，但不至于过小 */
+      }
+      #mainMenu h1 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+      }
+      .menu-btn {
+        width: 9rem;
+        font-size: 0.85rem;
+        margin: 0.4rem;
+      }
+      #mysteryGameBtn {
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+      }
+      .backToMenuBtn {
+        font-size: 0.8rem;
+        top: 0.5rem;
+        left: 0.5rem;
+      }
+      .quiz-header h2 {
+        font-size: 1rem;
+      }
+      .quiz-question h3 {
         font-size: 0.9rem;
+      }
+      .quiz-submit-btn {
+        width: 7rem;
+        font-size: 0.85rem;
       }
     }
 
-    /* ========== 动画内容（6大场景 + 场景4游戏） ========== */
+    /* ==================== 动画内容(6大场景 + 场景4游戏) ==================== */
     #animationContainer {
       width: 100%;
       height: 100%;
@@ -252,10 +290,10 @@
     /* 云朵漂移 */
     .cloud {
       position: absolute;
-      width: 200px;
-      height: 100px;
+      width: 12rem;
+      height: 6rem;
       background: #fff;
-      border-radius: 100px;
+      border-radius: 6rem;
       box-shadow: 60px 30px 0 20px #fff, 90px 40px 0 10px #fff;
       opacity: 0.8;
       animation: cloudMove 30s linear infinite;
@@ -276,12 +314,12 @@
     }
     .wave {
       position: absolute;
-      width: 2000px;
-      height: 200px;
-      top: -100px;
+      width: 125rem; /* 2000px相当于125rem(如1rem=16px) */
+      height: 12.5rem;
+      top: -6rem;
       left: 0;
       background: rgba(255,255,255,0.3);
-      border-radius: 43%;
+      border-radius: 50%;
       animation: waveAnimation 6s infinite linear;
       opacity: 0.8;
     }
@@ -291,28 +329,28 @@
     }
     @keyframes waveAnimation {
       0% { transform: translateX(0); }
-      100% { transform: translateX(-1000px); }
+      100% { transform: translateX(-62.5rem); }
     }
 
     /* 小船 */
     .boat {
       position: absolute;
-      width: 120px;
-      height: 60px;
+      width: 7.5rem;  /* 120px approx = 7.5rem */
+      height: 3.75rem;/* 60px approx = 3.75rem */
       left: 10%;
       bottom: 20%;
       background-color: #8d6e63; 
-      border-radius: 0 0 80px 80px;
+      border-radius: 0 0 5rem 5rem;
       animation: boatFloat 3s ease-in-out infinite;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+      box-shadow: 0 0.3rem 0.6rem rgba(0,0,0,0.3);
     }
     .boat::before {
       content: "";
       position: absolute;
-      width: 60px;
-      height: 60px;
-      right: 10px;
-      bottom: 30px;
+      width: 3.75rem; /* 60px => 3.75rem */
+      height: 3.75rem;
+      right: 0.6rem;
+      bottom: 1.875rem;
       background-color: #ffca28;
       transform-origin: bottom right;
       transform: skew(-10deg, 0);
@@ -326,32 +364,35 @@
     .card {
       background-color: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(4px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      border-radius: 12px;
-      padding: 20px;
+      box-shadow: 0 0.25rem 1.25rem rgba(0,0,0,0.2);
+      border-radius: 0.75rem;
+      padding: 1rem;
       position: relative;
+      max-width: 80%;
+      margin: 0 auto;
     }
 
-    /* ========== “进入下一部分”按钮 ========== */
+    /* “进入下一部分”按钮 */
     .next-part-btn {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
-      padding: 10px 16px;
+      bottom: 1.25rem;
+      right: 1.25rem;
+      padding: 0.6rem 1rem;
       background: #8bc34a;
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: 0.5rem;
       cursor: pointer;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      box-shadow: 0 0.2rem 0.8rem rgba(0,0,0,0.2);
       transition: background 0.3s;
-      z-index: 998; /* 在文字卡片之上 */
+      font-size: 0.9rem;
+      z-index: 998;
     }
     .next-part-btn:hover {
       background: #7cb342;
     }
 
-    /* ========== 场景1 样式 ========== */
+    /* 场景1 样式 */
     #scene1 .title {
       position: absolute;
       top: 15%;
@@ -365,13 +406,13 @@
       50% { transform: translateY(-5px); }
     }
 
-    /* ========== 场景2 3D翻转卡片等 ========== */
+    /* 场景2 3D翻转卡片等 */
     #scene2 .diagram-container {
       position: absolute;
       top: 15%;
       right: 10%;
-      width: 300px;
-      height: 320px;
+      width: 18.75rem; /* 300px ~ 18.75rem */
+      height: 20rem;   /* 320px ~ 20rem */
       perspective: 1000px;
     }
     .diagram-card {
@@ -393,7 +434,7 @@
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      border-radius: 10px;
+      border-radius: 0.5rem;
     }
     .diagram-front {
       background: #fffae6;
@@ -401,6 +442,9 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 1rem;
     }
     .diagram-back {
       background: #fff5e1;
@@ -409,28 +453,30 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      font-size: 0.9rem;
+      text-align: center;
+      padding: 1rem;
     }
 
-    /* ========== 场景3 水闸类型卡片 ========== */
+    /* 场景3 水闸类型卡片 */
     #scene3 .gate-types {
       position: absolute;
       top: 10%;
       left: 10%;
       width: 80%;
       height: 70%;
-      padding: 20px;
-      overflow: hidden;
+      padding: 1rem;
       display: flex;
       background-color: rgba(255, 255, 255, 0.7);
-      border-radius: 10px;
+      border-radius: 0.75rem;
     }
     .gate-item {
       flex: 1;
-      margin: 10px;
+      margin: 0.5rem;
       border: 2px solid #90caf9;
-      border-radius: 10px;
+      border-radius: 0.5rem;
       background: rgba(255,255,255,0.7);
-      padding: 10px;
+      padding: 0.5rem;
       animation: gateItemFloat 5s infinite ease-in-out;
       display: flex;
       flex-direction: column;
@@ -441,57 +487,69 @@
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-5px); }
     }
+    .gate-item h4 {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    .gate-item p {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: #444;
+      text-align: center;
+    }
 
-    /* ========== 场景4：水闸小游戏 ========== */
+    /* 场景4：水闸小游戏 */
     #scene4 .lock-system {
       position: absolute;
       top: 10%;
       left: 5%;
       width: 90%;
       height: 75%;
-      border-radius: 10px;
+      border-radius: 0.5rem;
       overflow: hidden;
-      padding: 20px;
+      padding: 1rem;
       background-color: rgba(255, 255, 255, 0.7);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 0.3rem 1rem rgba(0,0,0,0.2);
       display: flex;
       flex-direction: row;
     }
     /* 左侧操作面板 */
     .sidebar-game {
-      width: 250px;
-      min-width: 200px;
+      width: 15rem;
+      min-width: 12rem;
       background-color: rgba(255,255,255,0.9);
-      border-radius: 8px;
+      border-radius: 0.5rem;
       border: 1px solid #ccc;
-      margin-right: 20px;
-      padding: 10px;
+      margin-right: 1rem;
+      padding: 0.5rem;
       overflow-y: auto;
     }
     .sidebar-game h3 {
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
     }
     .sidebar-game p {
-      margin: 5px 0;
-      font-size: 0.9rem;
+      margin: 0.3rem 0;
+      font-size: 0.85rem;
       line-height: 1.4;
     }
     .btn-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
-      margin: 10px 0;
+      gap: 0.4rem;
+      margin: 0.5rem 0;
     }
     .btn-group button {
       flex: 1 1 auto;
-      padding: 8px;
-      margin: 2px;
+      padding: 0.4rem;
+      margin: 0.2rem;
       border: none;
-      border-radius: 6px;
+      border-radius: 0.4rem;
       background: #42a5f5;
       color: #fff;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       cursor: pointer;
       transition: background 0.3s ease, transform 0.2s ease;
     }
@@ -509,7 +567,7 @@
     .lock-visual {
       flex: 1;
       position: relative;
-      border-radius: 8px;
+      border-radius: 0.4rem;
       border: 1px solid #ccc;
       margin: 0 auto;
       overflow: hidden;
@@ -520,18 +578,18 @@
       height: 60%;
       top: 20%;
       left: 10%;
-      background-color: #bbdefb; /* 闸室水域 */
+      background-color: #bbdefb;
       border: 2px solid #0d47a1;
-      border-radius: 5px;
+      border-radius: 0.3rem;
       overflow: hidden;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: inset 0 0 0.6rem rgba(0,0,0,0.1);
     }
     .chamber-water {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 80%; /* 初始：上游水位80% */
+      height: 80%;
       background: linear-gradient(to top, #4fc3f7 0%, #b3e5fc 100%);
       transition: height 1.5s ease;
     }
@@ -552,24 +610,24 @@
     .lock-boat {
       position: absolute;
       bottom: 10%;
-      width: 80px;
-      height: 40px;
+      width: 5rem; 
+      height: 2.5rem;
       background-color: #8d6e63;
-      border-radius: 40px 40px 0 0;
-      left: -15%;
+      border-radius: 2.5rem 2.5rem 0 0;
+      left: -8%;
       transition: left 1.5s ease, bottom 1.5s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.3);
     }
     /* 阀门 */
     .valve {
       position: absolute;
-      width: 24px;
-      height: 24px;
+      width: 1.5rem;
+      height: 1.5rem;
       border: 2px solid #fff;
       border-radius: 50%;
       background-color: red; /* 关闭状态 */
       cursor: pointer;
-      box-shadow: 0 0 6px rgba(0,0,0,0.2);
+      box-shadow: 0 0 0.4rem rgba(0,0,0,0.2);
       transition: background 0.3s ease;
     }
     .valve.open { background-color: #2ecc71; }
@@ -585,19 +643,20 @@
     }
 
     .status-bar {
-      margin-top: 10px;
-      padding: 6px;
+      margin-top: 0.5rem;
+      padding: 0.3rem;
       background: rgba(0,0,0,0.3);
       color: #fff;
-      border-radius: 4px;
+      border-radius: 0.3rem;
+      font-size: 0.8rem;
     }
     .status-bar span {
-      margin-right: 10px;
+      margin-right: 0.5rem;
     }
     /* “游戏说明”按钮和弹窗 */
     #btnShowGameHelp {
       width: 100%;
-      margin-top: 6px;
+      margin-top: 0.4rem;
       background: #9c27b0;
     }
     #btnShowGameHelp:hover {
@@ -605,40 +664,42 @@
     }
     .help-overlay {
       position: absolute;
-      top: 50px;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
+      top: 2rem;
+      left: 1rem;
+      right: 1rem;
+      bottom: 1rem;
       background: rgba(255,255,255,0.9);
       border: 2px solid #ccc;
-      border-radius: 8px;
-      padding: 20px;
+      border-radius: 0.5rem;
+      padding: 1rem;
       overflow-y: auto;
       display: none; /* 初始隐藏 */
       z-index: 999;
     }
     .help-overlay h4 {
-      margin-bottom: 10px;
+      margin-bottom: 0.5rem;
       color: #333;
+      font-size: 1rem;
     }
     .help-overlay p {
-      margin-bottom: 10px;
+      margin-bottom: 0.5rem;
       color: #555;
-      line-height: 1.5;
+      line-height: 1.4;
+      font-size: 0.9rem;
     }
     .help-overlay button {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      padding: 6px 10px;
+      top: 0.5rem;
+      right: 0.5rem;
+      padding: 0.4rem 0.6rem;
       background: #f44336;
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: 0.4rem;
       cursor: pointer;
     }
 
-    /* ========== 场景5：运河意义 ========== */
+    /* 场景5：运河意义 */
     #scene5 .scenery {
       position: absolute;
       width: 100%;
@@ -658,12 +719,13 @@
       top: 10%;
       left: 10%;
       width: 80%;
-      border-radius: 10px;
-      padding: 20px;
+      border-radius: 0.5rem;
+      padding: 1rem;
       animation: contentFloat 3s infinite ease-in-out;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      box-shadow: 0 0.25rem 0.9rem rgba(0,0,0,0.2);
       background-color: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(4px);
+      font-size: 0.9rem;
     }
     @keyframes contentFloat {
       0%, 100% { transform: translateY(0); }
@@ -673,12 +735,12 @@
       position: absolute;
       bottom: 20%;
       left: -10%;
-      width: 120px;
-      height: 60px;
+      width: 7.5rem;
+      height: 3.75rem;
       background-color: #8d6e63;
-      border-radius: 0 0 80px 80px;
+      border-radius: 0 0 5rem 5rem;
       animation: townBoatMove 10s linear infinite;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 0.3rem 0.6rem rgba(0,0,0,0.2);
     }
     @keyframes townBoatMove {
       0% { left: -10%; }
@@ -688,20 +750,20 @@
       position: absolute;
       bottom: 40%;
       left: 15%;
-      width: 150px;
-      height: 150px;
+      width: 9.375rem; /* 150px=9.375rem */
+      height: 9.375rem;
       background-color: #ffcc80;
       border: 2px solid #ffb74d;
-      border-radius: 10px;
+      border-radius: 0.5rem;
       animation: buildingPulse 6s infinite alternate;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0.2rem 0.6rem rgba(0,0,0,0.1);
     }
     @keyframes buildingPulse {
       0% { transform: scale(1); }
       100% { transform: scale(1.02); }
     }
 
-    /* ========== 场景6 结尾 ========== */
+    /* 场景6：结尾 */
     #scene6 .final-view {
       position: absolute;
       top: 0; left: 0;
@@ -713,13 +775,13 @@
       top: 20%;
       left: 10%;
       width: 80%;
-      font-size: 1.2rem;
-      padding: 20px;
-      border-radius: 10px;
+      font-size: 1rem;
+      padding: 1rem;
+      border-radius: 0.5rem;
       animation: finalTextShake 3s infinite ease-in-out;
       background-color: rgba(255,255,255,0.8);
       backdrop-filter: blur(3px);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 0.25rem 1.25rem rgba(0,0,0,0.2);
     }
     @keyframes finalTextShake {
       0%, 100% { transform: translate(0, 0); }
@@ -742,10 +804,8 @@
       0% { transform: translateX(0%); }
       100% { transform: translateX(-50%); }
     }
-
   </style>
 </head>
-
 <body>
 <div id="app">
   <!-- ========== 主菜单 ========== -->
@@ -762,6 +822,8 @@
     <button class="backToMenuBtn" id="btnBackMenuFromAnimation">返回主菜单</button>
 
     <div id="animationContainer">
+      <!-- (以下场景与逻辑同之前示例，只是样式已优化) -->
+
       <!-- 场景1 -->
       <div id="scene1" class="scene">
         <!-- 云朵 -->
@@ -774,7 +836,6 @@
         </div>
         <!-- 小船 -->
         <div class="boat"></div>
-
         <!-- 文字卡片 -->
         <div class="title card fade-in">
           <h2>欢迎来到“探秘京杭大运河”解说短片</h2>
@@ -826,11 +887,11 @@
           right:10%;
           background-color: rgba(255,255,255,0.8);
           color: #333;
-          padding: 10px;
-          border-radius: 10px;
+          padding: 0.5rem;
+          border-radius: 0.5rem;
         ">
-          <h3>什么是水闸？</h3>
-          <p>
+          <h3 style="font-size:1rem;">什么是水闸？</h3>
+          <p style="font-size:0.9rem;">
             水闸是一种用来控制水位和水流的水工建筑。它通常由闸门、闸室和控制系统组成。
             其功能包括帮助船只克服上下游水位差，调节水流量，以及在汛期分洪或防止洪水。
           </p>
@@ -911,7 +972,7 @@
               <button id="openRightGate">打开下闸门</button>
               <button id="closeRightGate">关闭下闸门</button>
             </div>
-            <hr>
+            <hr/>
             <button id="btnShowGameHelp">游戏说明</button>
             <button id="resetGame">重新开始</button>
             <div class="status-bar">
@@ -949,7 +1010,7 @@
             </div>
           </div>
         </div>
-        <!-- “进入下一部分”按钮，只有在游戏完成后才有效果，但按需求可随时点击，立即跳转下场景 -->
+        <!-- “进入下一部分”按钮 -->
         <button class="next-part-btn" id="scene4NextBtn">进入下一部分</button>
       </div>
 
@@ -957,8 +1018,8 @@
       <div id="scene5" class="scene">
         <div class="scenery">
           <div class="text-box fade-in">
-            <h3>京杭大运河的意义</h3>
-            <p>
+            <h3 style="font-size:1rem;">京杭大运河的意义</h3>
+            <p style="font-size:0.9rem;">
               京杭大运河是世界上最长的人工河，始建于两千多年前。
               不仅是古代中国南北交通的重要枢纽，也是现代水利工程的典范。
               水闸的运用让大运河水路更加安全便利，并为沿岸城市的发展提供了强大助力。
@@ -975,13 +1036,13 @@
         <div class="final-view fade-in">
           <div class="final-pan"></div>
           <div class="final-text">
-            <p>
+            <p style="font-size:1rem;">
               “通过了解京杭大运河内水闸的类型和原理，
               我们看到了古代智慧与现代科技的结合。
               希望大家在下一次参观大运河时，能更加了解这条伟大的水路，
               一起守护大运河的未来！”
             </p>
-            <p style="margin-top:20px; text-align:right; font-weight:bold;">—— 感谢观看！</p>
+            <p style="margin-top:1rem; text-align:right; font-weight:bold; font-size:1rem;">—— 感谢观看！</p>
           </div>
         </div>
       </div>
@@ -1030,7 +1091,10 @@
 </div>
 
 <script>
-  /* ========== 全局 DOM 获取 ========== */
+  /*
+    JS逻辑与之前相同，保留“进入下一部分”按钮功能、自动场景切换、水闸小游戏逻辑、问答排行榜
+    不再省略任何逻辑。
+  */
   const mainMenu = document.getElementById('mainMenu');
   const animationPage = document.getElementById('animationPage');
   const quizPage = document.getElementById('quizPage');
@@ -1045,10 +1109,7 @@
   const quizResult = document.getElementById('quizResult');
   const leaderboardArea = document.getElementById('leaderboardArea');
 
-  // 动画容器
-  const animationContainer = document.getElementById('animationContainer');
-
-  // 6 场景
+  // 场景
   const scenes = [
     document.getElementById('scene1'),
     document.getElementById('scene2'),
@@ -1057,10 +1118,16 @@
     document.getElementById('scene5'),
     document.getElementById('scene6'),
   ];
-
   let currentSceneIndex = 0;
+  let sceneTimers = [];
 
-  // ========== 显示/隐藏不同页面 ========== 
+  // next-part按钮
+  const scene1NextBtn = document.getElementById('scene1NextBtn');
+  const scene2NextBtn = document.getElementById('scene2NextBtn');
+  const scene3NextBtn = document.getElementById('scene3NextBtn');
+  const scene4NextBtn = document.getElementById('scene4NextBtn');
+  const scene5NextBtn = document.getElementById('scene5NextBtn');
+
   function showMainMenu() {
     mainMenu.classList.remove('hidden');
     animationPage.classList.add('hidden');
@@ -1076,7 +1143,6 @@
     mainMenu.classList.add('hidden');
     animationPage.classList.add('hidden');
     quizPage.classList.remove('hidden');
-    // 重置问答结果
     quizResult.textContent = "";
     leaderboardArea.textContent = "";
   }
@@ -1086,12 +1152,11 @@
   btnBackMenuFromAnimation.addEventListener('click', showMainMenu);
   btnBackMenuFromQuiz.addEventListener('click', showMainMenu);
 
-  // ========== 问答游戏 ========== 
+  /* 问答游戏提交 */
   quizSubmitBtn.addEventListener('click', () => {
     const questions = document.querySelectorAll('.quiz-question');
     let correctCount = 0;
     let totalCount = questions.length;
-
     questions.forEach(q => {
       const correctAnswer = q.getAttribute('data-answer');
       const inputs = q.querySelectorAll('input[type="radio"]');
@@ -1107,17 +1172,12 @@
     });
 
     quizResult.textContent = `本次答对：${correctCount} / ${totalCount} 题`;
-
-    // 模拟“杨金老师、辛宇老师、胡明波老师”成绩(可按需改写)
     const teacherScores = [
       { name: '杨金老师', score: totalCount }, 
       { name: '辛宇老师', score: totalCount-1 },
       { name: '胡明波老师', score: Math.max(1, totalCount-1) },
     ];
-
-    // 生成排行榜
     let rankingText = `<p>排行榜(与老师对比)：</p><ul style="list-style:none;padding:0;">`;
-    // 自己的分数 
     rankingText += `<li>你：${correctCount} / ${totalCount}</li>`;
     teacherScores.forEach(ts => {
       rankingText += `<li>${ts.name}：${ts.score} / ${totalCount}</li>`;
@@ -1126,21 +1186,15 @@
     leaderboardArea.innerHTML = rankingText;
   });
 
-
-  // ========== 动画场景自动切换逻辑 ========== 
-  let sceneTimers = []; // 存储场景自动切换的计时器
-
+  /* 动画场景切换 */
   function showScene(idx) {
-    scenes.forEach((sc, i) => {
-      sc.classList.remove('active');
-    });
+    scenes.forEach(s => s.classList.remove('active'));
     scenes[idx].classList.add('active');
   }
-
   function fadeTransition(fromIndex, toIndex) {
     scenes[fromIndex].classList.add('fade-out');
     setTimeout(() => {
-      scenes[fromIndex].classList.remove('active', 'fade-out');
+      scenes[fromIndex].classList.remove('active','fade-out');
       showScene(toIndex);
       scenes[toIndex].classList.add('fade-in');
       setTimeout(() => {
@@ -1149,410 +1203,285 @@
     }, 1500);
   }
 
-  // 手动跳场景：清除对应timer并直接进入下一场景
   function skipToNextScene() {
     if(currentSceneIndex < scenes.length - 1) {
-      // 清除当前场景的timer
       clearTimeout(sceneTimers[currentSceneIndex]);
-      // 手动调用fade
-      fadeTransition(currentSceneIndex, currentSceneIndex + 1);
+      fadeTransition(currentSceneIndex, currentSceneIndex+1);
       currentSceneIndex++;
-      // 如果是场景4，需要初始化游戏等逻辑？
       if(currentSceneIndex === 3) {
-        initGame();
+        initGame(); // 场景4启动水闸小游戏
       }
-      else if(currentSceneIndex === 4) {
-        // 进入场景5
-        setTimeout(() => {
-          fadeTransition(4, 5);
-          currentSceneIndex = 5;
-        }, 30000);
+      if(currentSceneIndex === 4) {
+        // 场景5停留30秒->场景6
+        sceneTimers[4] = setTimeout(() => {
+          fadeTransition(4,5);
+          currentSceneIndex=5;
+        },30000);
       }
     }
   }
 
-  // 切到场景5
+  scene1NextBtn.addEventListener('click', skipToNextScene);
+  scene2NextBtn.addEventListener('click', skipToNextScene);
+  scene3NextBtn.addEventListener('click', skipToNextScene);
+  scene4NextBtn.addEventListener('click', skipToNextScene);
+  scene5NextBtn.addEventListener('click', skipToNextScene);
+
   function goToScene5() {
-    fadeTransition(3, 4);
-    currentSceneIndex = 4;
-    // 场景5 -> 30秒 -> 场景6
-    sceneTimers[4] = setTimeout(() => {
-      fadeTransition(4, 5);
-      currentSceneIndex = 5;
-    }, 30000);
+    fadeTransition(3,4);
+    currentSceneIndex=4;
+    sceneTimers[4] = setTimeout(()=>{
+      fadeTransition(4,5);
+      currentSceneIndex=5;
+    },30000);
   }
 
   function startScenePlay() {
-    // 清理之前定时器
-    sceneTimers.forEach(t => clearTimeout(t));
-    sceneTimers = [];
-
-    currentSceneIndex = 0;
+    sceneTimers.forEach(t=>clearTimeout(t));
+    sceneTimers=[];
+    currentSceneIndex=0;
     showScene(0);
 
-    // 场景1 -> 30秒 -> 2
-    sceneTimers[0] = setTimeout(() => {
+    // 场景1->30秒->2
+    sceneTimers[0]=setTimeout(()=>{
       fadeTransition(0,1);
-      currentSceneIndex = 1;
-    }, 30000);
+      currentSceneIndex=1;
+    },30000);
 
-    // 场景2 -> 30秒 -> 3
-    sceneTimers[1] = setTimeout(() => {
+    // 场景2->30秒->3
+    sceneTimers[1]=setTimeout(()=>{
       fadeTransition(1,2);
-      currentSceneIndex = 2;
-    }, 60000);
+      currentSceneIndex=2;
+    },60000);
 
-    // 场景3 -> 30秒 -> 4(游戏)
-    sceneTimers[2] = setTimeout(() => {
+    // 场景3->30秒->4
+    sceneTimers[2]=setTimeout(()=>{
       fadeTransition(2,3);
-      currentSceneIndex = 3;
+      currentSceneIndex=3;
       initGame();
-    }, 90000);
+    },90000);
   }
 
-  // ========== 场景4：水闸游戏逻辑 ========== 
-  let timeElapsed = 0;
-  let timerInterval = null;
-  let stepCount = 0;
-  let isGameOver = false;
+  /* 场景4小游戏 */
+  let timeElapsed=0, timerInterval=null, stepCount=0, isGameOver=false;
+  let waterLowered=false, boatInChamber=false, waterRaised=false, boatOut=false;
 
-  let waterLowered = false;  
-  let boatInChamber = false; 
-  let waterRaised = false;  
-  let boatOut = false;
+  const valveTop=document.getElementById('valveTop');
+  const valveBottom=document.getElementById('valveBottom');
+  const gateLeft=document.getElementById('gateLeft');
+  const gateRight=document.getElementById('gateRight');
+  const chamberWater=document.getElementById('chamberWater');
+  const lockBoat=document.getElementById('lockBoat');
 
-  const valveTop = document.getElementById('valveTop');
-  const valveBottom = document.getElementById('valveBottom');
-  const gateLeft = document.getElementById('gateLeft');
-  const gateRight = document.getElementById('gateRight');
-  const chamberWater = document.getElementById('chamberWater');
-  const lockBoat = document.getElementById('lockBoat');
+  const openTopValveBtn=document.getElementById('openTopValve');
+  const closeTopValveBtn=document.getElementById('closeTopValve');
+  const openBottomValveBtn=document.getElementById('openBottomValve');
+  const closeBottomValveBtn=document.getElementById('closeBottomValve');
+  const openLeftGateBtn=document.getElementById('openLeftGate');
+  const closeLeftGateBtn=document.getElementById('closeLeftGate');
+  const openRightGateBtn=document.getElementById('openRightGate');
+  const closeRightGateBtn=document.getElementById('closeRightGate');
+  const resetGameBtn=document.getElementById('resetGame');
 
-  const openTopValveBtn = document.getElementById('openTopValve');
-  const closeTopValveBtn = document.getElementById('closeTopValve');
-  const openBottomValveBtn = document.getElementById('openBottomValve');
-  const closeBottomValveBtn = document.getElementById('closeBottomValve');
-  const openLeftGateBtn = document.getElementById('openLeftGate');
-  const closeLeftGateBtn = document.getElementById('closeLeftGate');
-  const openRightGateBtn = document.getElementById('openRightGate');
-  const closeRightGateBtn = document.getElementById('closeRightGate');
-  const resetGameBtn = document.getElementById('resetGame');
+  const timerText=document.getElementById('timerText');
+  const stepsText=document.getElementById('stepsText');
+  const gameStatus=document.getElementById('gameStatus');
 
-  const timerText = document.getElementById('timerText');
-  const stepsText = document.getElementById('stepsText');
-  const gameStatus = document.getElementById('gameStatus');
+  const gameHelpOverlay=document.getElementById('gameHelpOverlay');
+  const btnShowGameHelp=document.getElementById('btnShowGameHelp');
+  const btnCloseHelp=document.getElementById('btnCloseHelp');
 
-  // 游戏说明弹窗
-  const gameHelpOverlay = document.getElementById('gameHelpOverlay');
-  const btnShowGameHelp = document.getElementById('btnShowGameHelp');
-  const btnCloseHelp = document.getElementById('btnCloseHelp');
-
-  btnShowGameHelp.addEventListener('click', () => {
-    gameHelpOverlay.style.display = 'block';
+  btnShowGameHelp.addEventListener('click',()=>{
+    gameHelpOverlay.style.display='block';
   });
-  btnCloseHelp.addEventListener('click', () => {
-    gameHelpOverlay.style.display = 'none';
+  btnCloseHelp.addEventListener('click',()=>{
+    gameHelpOverlay.style.display='none';
   });
 
-  function disableAllGameBtns(ms=1500) {
+  function disableAllGameBtns(ms=1500){
     [
-      openTopValveBtn, closeTopValveBtn,
-      openBottomValveBtn, closeBottomValveBtn,
-      openLeftGateBtn, closeLeftGateBtn,
-      openRightGateBtn, closeRightGateBtn
-    ].forEach(btn => {
-      btn.disabled = true;
-      setTimeout(() => { btn.disabled = false; }, ms);
+      openTopValveBtn,closeTopValveBtn,openBottomValveBtn,closeBottomValveBtn,
+      openLeftGateBtn,closeLeftGateBtn,openRightGateBtn,closeRightGateBtn
+    ].forEach(btn=>{
+      btn.disabled=true;
+      setTimeout(()=>{ btn.disabled=false; },ms);
     });
   }
 
-  function initGame() {
-    timeElapsed = 0;
-    stepCount = 0;
-    isGameOver = false;
-    waterLowered = false;
-    boatInChamber = false;
-    waterRaised = false;
-    boatOut = false;
+  function initGame(){
+    timeElapsed=0; stepCount=0; isGameOver=false;
+    waterLowered=false; boatInChamber=false; waterRaised=false; boatOut=false;
 
     valveTop.classList.remove('open');
     valveBottom.classList.remove('open');
     gateLeft.classList.remove('open-left');
     gateRight.classList.remove('open-right');
 
-    chamberWater.style.height = '80%'; 
-    lockBoat.style.left = '-15%'; 
-    lockBoat.style.bottom = '10%';
+    chamberWater.style.height='80%';
+    lockBoat.style.left='-8%'; 
+    lockBoat.style.bottom='10%';
 
-    timerText.textContent = '0';
-    stepsText.textContent = '0';
-    gameStatus.textContent = '等待操作';
+    timerText.textContent='0';
+    stepsText.textContent='0';
+    gameStatus.textContent='等待操作';
 
     if(timerInterval) clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-      if(!isGameOver) {
+    timerInterval=setInterval(()=>{
+      if(!isGameOver){
         timeElapsed++;
-        timerText.textContent = timeElapsed.toString();
+        timerText.textContent=timeElapsed.toString();
       }
-    }, 1000);
+    },1000);
   }
 
-  function addStep() {
-    if(!isGameOver) {
+  function addStep(){
+    if(!isGameOver){
       stepCount++;
-      stepsText.textContent = stepCount.toString();
+      stepsText.textContent=stepCount.toString();
     }
   }
 
-  function failAction(msg) {
-    if(!isGameOver) {
-      isGameOver = true;
-      gameStatus.textContent = '操作错误：' + msg;
+  function failAction(msg){
+    if(!isGameOver){
+      isGameOver=true;
+      gameStatus.textContent='操作错误：'+msg;
       clearInterval(timerInterval);
-      alert('操作错误！' + msg + '\n请点击“重新开始”重试。');
+      alert('操作错误！'+msg+'\n请点击“重新开始”重试。');
     }
   }
 
-  function checkWin() {
-    if(boatOut && !isGameOver) {
-      isGameOver = true;
-      gameStatus.textContent = `通关！耗时${timeElapsed}s，操作${stepCount}次`;
+  function checkWin(){
+    if(boatOut && !isGameOver){
+      isGameOver=true;
+      gameStatus.textContent=`通关！耗时${timeElapsed}s，操作${stepCount}次`;
       clearInterval(timerInterval);
       alert(`恭喜你完成水闸操作！\n耗时：${timeElapsed}秒\n操作：${stepCount}次\n可等待自动跳转或点击“进入下一部分”`);
-      // 通关后，还会等待auto，但用户可点“进入下一部分”立即跳 scene5
     }
   }
 
-  // ========== “进入下一部分”按钮事件 ========== 
-  // 在每个场景末尾添加skipToNextScene()
-  const scene1NextBtn = document.getElementById('scene1NextBtn');
-  const scene2NextBtn = document.getElementById('scene2NextBtn');
-  const scene3NextBtn = document.getElementById('scene3NextBtn');
-  const scene4NextBtn = document.getElementById('scene4NextBtn');
-  const scene5NextBtn = document.getElementById('scene5NextBtn');
-
-  scene1NextBtn.addEventListener('click', () => {
-    skipToNextScene();
-  });
-  scene2NextBtn.addEventListener('click', () => {
-    skipToNextScene();
-  });
-  scene3NextBtn.addEventListener('click', () => {
-    skipToNextScene();
-  });
-  scene4NextBtn.addEventListener('click', () => {
-    skipToNextScene(); 
-  });
-  scene5NextBtn.addEventListener('click', () => {
-    skipToNextScene();
-  });
-
-  // ========== 手动跳过当前场景，进入下一个场景 ========== 
-  function skipToNextScene() {
-    // 如果未到最后一个场景，则可以跳转
-    if(currentSceneIndex < scenes.length - 1) {
-      // 清理本场景定时器
-      clearTimeout(sceneTimers[currentSceneIndex]);
-      // fade to next
-      fadeTransition(currentSceneIndex, currentSceneIndex + 1);
-      currentSceneIndex++;
-      // 如果跳到场景4，就初始化游戏
-      if(currentSceneIndex === 3) {
-        initGame();
-      }
-      // 如果是从场景4跳到场景5，需要设置30s后自动到6
-      if(currentSceneIndex === 4) {
-        sceneTimers[4] = setTimeout(() => {
-          fadeTransition(4, 5);
-          currentSceneIndex = 5;
-        }, 30000);
-      }
-    }
-  }
-
-  // ========== 切到场景5(游戏完成后自动) ========== 
-  function goToScene5() {
-    fadeTransition(3, 4);
-    currentSceneIndex = 4;
-    // 场景5 -> 30秒 -> 场景6
-    sceneTimers[4] = setTimeout(() => {
-      fadeTransition(4, 5);
-      currentSceneIndex = 5;
-    }, 30000);
-  }
-
-  // ========== 启动场景播放：场景1 ~ 3自动切，4(游戏) -> 完成后手动or自动到5->6 ========== 
-  function startScenePlay() {
-    // 清理之前定时器
-    sceneTimers.forEach(t => clearTimeout(t));
-    sceneTimers = [];
-
-    currentSceneIndex = 0;
-    showScene(0);
-
-    // 场景1 -> 30秒 -> 场景2
-    sceneTimers[0] = setTimeout(() => {
-      fadeTransition(0,1);
-      currentSceneIndex = 1;
-    }, 30000);
-
-    // 场景2 -> 30秒 -> 场景3
-    sceneTimers[1] = setTimeout(() => {
-      fadeTransition(1,2);
-      currentSceneIndex = 2;
-    }, 60000);
-
-    // 场景3 -> 30秒 -> 场景4(游戏)
-    sceneTimers[2] = setTimeout(() => {
-      fadeTransition(2,3);
-      currentSceneIndex = 3;
-      initGame();
-    }, 90000);
-  }
-
-  // ========== 游戏按钮事件 ========== 
-  openTopValveBtn.addEventListener('click', () => {
+  /* 游戏按钮事件 */
+  openTopValveBtn.addEventListener('click',()=>{
     if(isGameOver) return;
-    addStep();
-    disableAllGameBtns();
-    if(boatInChamber) {
+    addStep(); disableAllGameBtns();
+    if(boatInChamber){
       failAction('船在闸室里，不能再开上阀排水。');
       return;
     }
     valveTop.classList.add('open');
-    gameStatus.textContent = '上阀已开启，水位下降中...';
-    chamberWater.style.height = '40%';
+    gameStatus.textContent='上阀已开启，水位下降中...';
+    chamberWater.style.height='40%';
   });
-  closeTopValveBtn.addEventListener('click', () => {
+  closeTopValveBtn.addEventListener('click',()=>{
     if(isGameOver) return;
-    addStep();
-    disableAllGameBtns();
-
-    if(!valveTop.classList.contains('open')) {
+    addStep(); disableAllGameBtns();
+    if(!valveTop.classList.contains('open')){
       failAction('上阀未开启，无法关闭！');
       return;
     }
-    const hVal = parseInt(chamberWater.style.height);
-    if(hVal > 45) {
+    const hVal=parseInt(chamberWater.style.height);
+    if(hVal>45){
       failAction('水位尚未降到约40%，就关闭上阀？');
       return;
     }
     valveTop.classList.remove('open');
-    waterLowered = true;
-    gameStatus.textContent = '上阀已关闭，水位保持低位(40%)。';
+    waterLowered=true;
+    gameStatus.textContent='上阀已关闭，水位保持低位(40%)。';
   });
-  openLeftGateBtn.addEventListener('click', () => {
+  openLeftGateBtn.addEventListener('click',()=>{
     if(isGameOver) return;
-    addStep();
-    disableAllGameBtns();
-
-    if(!waterLowered) {
+    addStep(); disableAllGameBtns();
+    if(!waterLowered){
       failAction('还没将水位降到下游水平，就想打开上闸门？');
       return;
     }
-    if(boatInChamber) {
+    if(boatInChamber){
       failAction('船已在闸室，无需再开上闸门。');
       return;
     }
     gateLeft.classList.add('open-left');
-    gameStatus.textContent = '上闸门已打开，船正在进入...';
-    setTimeout(() => {
-      lockBoat.style.left = '35%';
-      setTimeout(() => {
-        boatInChamber = true;
-      }, 1500);
-    }, 100);
+    gameStatus.textContent='上闸门已打开，船正在进入...';
+    setTimeout(()=>{
+      lockBoat.style.left='35%';
+      setTimeout(()=>{ boatInChamber=true; },1500);
+    },100);
   });
-  closeLeftGateBtn.addEventListener('click', () => {
+  closeLeftGateBtn.addEventListener('click',()=>{
     if(isGameOver) return;
-    addStep();
-    disableAllGameBtns();
-
-    if(!gateLeft.classList.contains('open-left')) {
+    addStep(); disableAllGameBtns();
+    if(!gateLeft.classList.contains('open-left')){
       failAction('上闸门未打开，无法关闭。');
       return;
     }
-    if(!boatInChamber) {
+    if(!boatInChamber){
       failAction('船尚未进入闸室就关闭闸门？');
       return;
     }
     gateLeft.classList.remove('open-left');
-    gameStatus.textContent = '上闸门已关闭。';
+    gameStatus.textContent='上闸门已关闭。';
   });
-  openBottomValveBtn.addEventListener('click', () => {
+  openBottomValveBtn.addEventListener('click',()=>{
     if(isGameOver) return;
-    addStep();
-    disableAllGameBtns();
-
-    if(!boatInChamber) {
+    addStep(); disableAllGameBtns();
+    if(!boatInChamber){
       failAction('船还没进闸室，就开启下阀？');
       return;
     }
-    if(valveBottom.classList.contains('open')) {
+    if(valveBottom.classList.contains('open')){
       failAction('下阀已是开启状态。');
       return;
     }
     valveBottom.classList.add('open');
-    chamberWater.style.height = '80%';
-    gameStatus.textContent = '下阀已开启，水位升回上游高度...';
+    chamberWater.style.height='80%';
+    gameStatus.textContent='下阀已开启，水位升回上游高度...';
   });
-  closeBottomValveBtn.addEventListener('click', () => {
+  closeBottomValveBtn.addEventListener('click',()=>{
     if(isGameOver) return;
-    addStep();
-    disableAllGameBtns();
-
-    if(!valveBottom.classList.contains('open')) {
+    addStep(); disableAllGameBtns();
+    if(!valveBottom.classList.contains('open')){
       failAction('下阀并未开启，无法关闭。');
       return;
     }
-    const hVal = parseInt(chamberWater.style.height);
-    if(hVal < 75) {
+    const hVal=parseInt(chamberWater.style.height);
+    if(hVal<75){
       failAction('水位尚未升到80%，就关闭下阀？');
       return;
     }
     valveBottom.classList.remove('open');
-    waterRaised = true;
-    gameStatus.textContent = '下阀已关闭，上游水位保持(80%)。';
+    waterRaised=true;
+    gameStatus.textContent='下阀已关闭，上游水位保持(80%)。';
   });
-  openRightGateBtn.addEventListener('click', () => {
+  openRightGateBtn.addEventListener('click',()=>{
     if(isGameOver) return;
-    addStep();
-    disableAllGameBtns();
-
-    if(!waterRaised) {
+    addStep(); disableAllGameBtns();
+    if(!waterRaised){
       failAction('还没把水位升回高位，就打开下闸门？');
       return;
     }
     gateRight.classList.add('open-right');
-    gameStatus.textContent = '下闸门已打开，船驶出...';
-    setTimeout(() => {
-      lockBoat.style.left = '110%';
-      setTimeout(() => {
-        boatOut = true;
+    gameStatus.textContent='下闸门已打开，船驶出...';
+    setTimeout(()=>{
+      lockBoat.style.left='110%';
+      setTimeout(()=>{
+        boatOut=true;
         checkWin();
-      }, 1500);
-    }, 100);
+      },1500);
+    },100);
   });
-  closeRightGateBtn.addEventListener('click', () => {
+  closeRightGateBtn.addEventListener('click',()=>{
     if(isGameOver) return;
-    addStep();
-    disableAllGameBtns();
-
-    if(!gateRight.classList.contains('open-right')) {
+    addStep(); disableAllGameBtns();
+    if(!gateRight.classList.contains('open-right')){
       failAction('下闸门未打开，无法关闭。');
       return;
     }
-    if(!boatOut) {
+    if(!boatOut){
       failAction('船尚未离开，就要关闭下闸门？');
       return;
     }
     gateRight.classList.remove('open-right');
-    gameStatus.textContent = '下闸门已关闭。';
+    gameStatus.textContent='下闸门已关闭。';
   });
-
-  resetGameBtn.addEventListener('click', () => {
-    initGame();
-  });
+  resetGameBtn.addEventListener('click',()=>{ initGame(); });
 
   // 默认显示主菜单
   showMainMenu();
